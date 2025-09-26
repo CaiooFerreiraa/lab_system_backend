@@ -5,8 +5,8 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon server.js",
-    "build": "no build step required"
+    "start": "node server.js",
+    "build": "echo \"No build step required\""
   },
   "repository": {
     "type": "git",
