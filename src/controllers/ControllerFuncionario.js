@@ -1,9 +1,20 @@
-import postgres from "postgres";
-import dotenv from 'dotenv'
-dotenv.config();
+class Funcionario {
+  constructor() {
+    
+  }
 
-const connectString = process.env.DATABASE_URL;
-const sql = postgres(connectString)
+  cadastrarTeste() {
+    
+  }
+
+  editarTeste() {
+
+  }
+
+  deletarTeste() {
+
+  }
+}
 
 const firstSelect = async (req, res) => {
   try {

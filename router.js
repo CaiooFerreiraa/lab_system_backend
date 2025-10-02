@@ -1,5 +1,5 @@
 import { Router } from "express";
-import dataBase from "./src/controllers/BDcontroller.js";
+import dataBase from "./src/controllers/ControllerFuncionario.js";
 const route = Router();
 
 route.get('/', (req, res) => {res.sendStatus(200)})
