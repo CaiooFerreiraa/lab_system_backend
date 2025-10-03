@@ -1,12 +1,12 @@
-import DataBase from "../Models/Database.js"
-import { funcionario } from "../FakerDatas/person.js";
-const dataBase = new DataBase();
+import { employeeData } from "../FakerDatas/person.js";
+import DatabaseFuncionario from "../Models/DatabaseFuncionario.js";
+const dataBase = new DatabaseFuncionario();
 
-const registerFuncionario = async (req, res) => {
-  await dataBase.registrarFuncionario(funcionario)
+const registerEmployee = async (req, res) => {
+  await dataBase.createEmployee(employeeData)
   res.sendStatus(200)
 }
 
 export default {
-  registerFuncionario
+  registerEmployee
 }

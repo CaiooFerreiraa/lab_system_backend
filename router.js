@@ -3,7 +3,7 @@ import func from './src/controllers/FuncionarioController.js';
 const route = Router();
 
 route.get('/', (req, res) => {res.sendStatus(200)})
-route.get('/registerFuncionario', func.registerFuncionario)
+route.get('/register', func.registerEmployee)
 
 route.get("/teste", (req, res) => {
   res.send("Olá Kauan, tudo joia?");
