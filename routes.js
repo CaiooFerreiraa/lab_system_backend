@@ -4,9 +4,6 @@ const route = Router();
 
 route.get('/', (req, res) => {res.sendStatus(200)})
 route.get('/register', func.registerEmployee)
-
-route.get("/teste", (req, res) => {
-  res.send("Olá Kauan, tudo joia?");
-})
+route.get('/view', func.viewsEmployee)
 
 export default route;

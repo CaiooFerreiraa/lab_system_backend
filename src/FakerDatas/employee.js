@@ -5,6 +5,7 @@ const registration = faker.string.alphanumeric(10).toUpperCase();
 
 // Nome e sobrenome reais
 const name = faker.person.firstName();
+
 const lastName = faker.person.lastName();
 
 // Turno escolhido entre 3 opções
