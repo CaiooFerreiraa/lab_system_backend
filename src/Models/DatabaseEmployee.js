@@ -8,7 +8,7 @@ export default class DatabaseEmployee {
   
   async #insertEmployee(employeeData) {
     try {
-      await dataBase`insert into funcionario(matricula, turno, nome, sobrenome) values (
+      await dataBase`INSERT INTO funcionario(matricula, turno, nome, sobrenome) VALUES (
       ${employeeData.registration}, ${employeeData.shift}, ${employeeData.name}, ${employeeData.lastName})
       `;
     } catch (error) {
@@ -18,7 +18,7 @@ export default class DatabaseEmployee {
 
   async #insertPhoneNumberInEmployee({ registration, phoneNumber }) {
     try {
-      await dataBase`insert into telefone(matricula, telefone) values (
+      await dataBase`INSERT INTO telefone(matricula, telefone) VALUES (
         ${registration}, ${phoneNumber})
       `;
     } catch (error) {
@@ -28,17 +28,45 @@ export default class DatabaseEmployee {
 
   async readEmployees() {
     try {
-      return await dataBase`select * from funcionario`
+      return await dataBase`SELECT * FROM funcionario f JOIN telefone t ON t.matricula = f.matricula`
     } catch (error) {
       throw new Error(error);
     }
   }
 
-  updateEmployee() {
-
+  async updateEmployeeAndPhoneNumber(employeeData) {
+    await this.#updateEmployeeData(employeeData);
+    await this.#updatePhoneNumberEmployee(employeeData);
   }
 
-  deleteEmployee() {
-    
+  async #updateEmployeeData(employeeData) {
+    try {
+      await dataBase`
+        UPDATE funcionario
+        SET turno = ${employeeData.shift}, nome = ${employeeData.name}, sobrenome = ${employeeData.lastName}
+        WHERE matricula = ${employeeData.registration}
+      `;  
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+  
+  async #updatePhoneNumberEmployee({registration, phoneNumber}) {
+    try {
+      await dataBase`
+        UPDATE telefone
+        SET telefone = ${phoneNumber}
+        WHERE matricula = ${registration}
+      `;
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+
+  async deleteEmployee({registration}) {
+      await dataBase`
+        DELETE FROM funcionario
+        WHERE matricula = ${registration}
+      `;  
   }
 }
