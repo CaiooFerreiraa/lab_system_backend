@@ -12,7 +12,7 @@ export default class DatabaseEmployee {
       ${employeeData.registration}, ${employeeData.shift}, ${employeeData.name}, ${employeeData.lastName})
       `;
     } catch (error) {
-      throw new Error(error);
+      throw error;
     }
   }
 
@@ -22,7 +22,7 @@ export default class DatabaseEmployee {
         ${registration}, ${phoneNumber})
       `;
     } catch (error) {
-      throw new Error(error);
+      throw error;
     }
   }
 
@@ -30,7 +30,7 @@ export default class DatabaseEmployee {
     try {
       return await dataBase`SELECT * FROM funcionario f JOIN telefone t ON t.matricula = f.matricula`
     } catch (error) {
-      throw new Error(error);
+      throw error;
     }
   }
 
@@ -47,7 +47,7 @@ export default class DatabaseEmployee {
         WHERE matricula = ${employeeData.registration}
       `;  
     } catch (error) {
-      throw new Error(error);
+     throw error;
     }
   }
   
@@ -59,7 +59,7 @@ export default class DatabaseEmployee {
         WHERE matricula = ${registration}
       `;
     } catch (error) {
-      throw new Error(error);
+     throw error;
     }
   }
 
