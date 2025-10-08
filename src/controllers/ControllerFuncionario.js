@@ -1,10 +1,16 @@
+import sql from '../../bd.js'
+
 class Funcionario {
   constructor() {
     
   }
 
-  cadastrarTeste() {
-    
+  async cadastrarTeste() {
+    try {
+      
+    } catch (error) {
+      
+    }
   }
 
   editarTeste() {
@@ -18,7 +24,7 @@ class Funcionario {
 
 const firstSelect = async (req, res) => {
   try {
-    const testes = await sql`select status from teste`;
+    const testes = await sql`select * from teste`;
     res.send(testes)
   } catch (error) {
     console.error(error)
