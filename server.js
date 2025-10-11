@@ -9,7 +9,7 @@ const port = process.env.PORT;
 
 app.use(express.json())
 app.use(cors({
-  origin: process.env.FRONTEND_URL,
+  origin: 'https://lab-system-backend.onrender.com',
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true
 }))
