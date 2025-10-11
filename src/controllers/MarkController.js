@@ -14,8 +14,8 @@ const insertMark = async (req, res) => {
 
 const viewMarks = async (req, res) => {
   try {
-    const marks = await databaseMark.readMark(markData())
-    res.send(marks)
+    const marks = await databaseMark.readMark(markData());
+    res.send(marks);
   } catch (error) {
     console.log(error)
     res.sendStatus(404);
@@ -47,4 +47,4 @@ export default {
   viewMarks,
   updateMark,
   deleteMark
-}
+};

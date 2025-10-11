@@ -8,9 +8,9 @@ const registerEmployee = async (req, res) => {
     res.sendStatus(200);
   } catch (err) {
     console.log(err);
-    res.sendStatus(400)
+    res.sendStatus(400);
   }
-}
+};
 
 const viewsEmployee = async (req, res) => {
   try {
@@ -20,7 +20,7 @@ const viewsEmployee = async (req, res) => {
     console.log(err);
     res.sendStatus(404);
   }
-}
+};
 
 const updateEmployee = async (req, res) => {
   try {
