@@ -13,7 +13,6 @@ const registerEmployee = async (req, res) => {
 
 const viewsEmployee = async (req, res) => {
   try {
-    EmployeeFacade.checkData(req.body);
     const employees = await dataBaseEmployee.readEmployees();
     res.send(employees);
   } catch (err) {
