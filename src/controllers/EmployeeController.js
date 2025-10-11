@@ -1,12 +1,14 @@
 import { employeeDataRandom, employeeDataTesteUpdateDelete } from "../FakerDatas/employeeFake.js";
 import DatabaseEmployee from "../Models/DatabaseEmployee.js";
 import EmployeeFacade from "../Facades/EmployeeFacade.js"
+import Employee from "../Entities/EmployeeEntitie.js";
 const dataBaseEmployee = new DatabaseEmployee();
 
 const registerEmployee = async (req, res) => {
   try {
-    EmployeeFacade.checkData(employeeDataRandom());
-    await dataBaseEmployee.createEmployee(employeeDataRandom());
+    const employeeData = new Employee(req.body);
+    EmployeeFacade.checkData(employeeData);
+    await dataBaseEmployee.createEmployee(employeeData);
     res.sendStatus(200);
   } catch (err) {
     console.log(err);
