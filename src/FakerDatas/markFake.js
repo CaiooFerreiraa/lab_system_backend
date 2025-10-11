@@ -1,6 +1,6 @@
 import { fakerPT_BR as faker } from "@faker-js/faker";
 
-export function markRandom() {
+export function markDataRandom() {
   const arrayMarks = ['Nike', 'Adidas', 'New Balance', 'Veja', 'Fila', 'Umbro', 'Asics', 'Osklen'];
 
   const marks = [];

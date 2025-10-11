@@ -13,7 +13,7 @@ export default class DatabaseMark {
     try {
       return await dataBase`SELECT * FROM marca`;
     } catch (error) {
-      throw error;;
+      throw error;
     }
   }
 
@@ -21,7 +21,7 @@ export default class DatabaseMark {
     try {
       await dataBase`UPDATE marca SET nome = ${name} WHERE cod_marca = ${cod_marca}`
     } catch (error) {
-      throw error;;
+      throw error;
     }
   }
 
@@ -29,7 +29,7 @@ export default class DatabaseMark {
     try {
       await dataBase`DELETE FROM marca WHERE cod_marca = ${cod_marca}`;
     } catch (error) {
-      throw error;;
+      throw error;
     }
   }
 }
