@@ -3,6 +3,8 @@ import EmployeeFacade from "../Facades/EmployeeFacade.js"
 const dataBaseEmployee = new DatabaseEmployee();
 
 const registerEmployee = async (req, res) => {
+  console.log(req.body);
+  
   try {
     await dataBaseEmployee.createEmployee(req.body);
     res.sendStatus(200);
