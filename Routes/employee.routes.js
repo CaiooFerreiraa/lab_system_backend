@@ -1,5 +1,5 @@
 import { Router } from "express";
-import employeeController from '../src/Controllers/EmployeeController.js'
+import employeeController from '../Controllers/EmployeeController'
 const route = Router();
 
 route.get(`/register`, employeeController.registerEmployee);
