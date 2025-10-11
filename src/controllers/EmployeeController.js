@@ -1,50 +1,42 @@
-import { employeeDataRandom, employeeDataTesteUpdateDelete } from "../FakerDatas/employeeFake.js";
 import DatabaseEmployee from "../Models/DatabaseEmployee.js";
 import EmployeeFacade from "../Facades/EmployeeFacade.js"
-import Employee from "../Entities/EmployeeEntitie.js";
 const dataBaseEmployee = new DatabaseEmployee();
 
 const registerEmployee = async (req, res) => {
   try {
-    const employeeData = new Employee(req.body);
-    EmployeeFacade.checkData(employeeData);
-    await dataBaseEmployee.createEmployee(employeeData);
+    await dataBaseEmployee.createEmployee(req.body);
     res.sendStatus(200);
   } catch (err) {
-    console.log(err);
     res.sendStatus(400);
   }
 };
 
 const viewsEmployee = async (req, res) => {
   try {
-    EmployeeFacade.checkData(employeeDataRandom());
+    EmployeeFacade.checkData(req.body);
     const employees = await dataBaseEmployee.readEmployees();
     res.send(employees);
   } catch (err) {
-    console.log(err);
     res.sendStatus(404);
   }
 };
 
 const updateEmployee = async (req, res) => {
   try {
-    EmployeeFacade.checkData(employeeDataTesteUpdateDelete());
-    await dataBaseEmployee.updateEmployeeAndPhoneNumber(employeeDataTesteUpdateDelete());
+    EmployeeFacade.checkData(req.body);
+    await dataBaseEmployee.updateEmployeeAndPhoneNumber(req.body);
     res.sendStatus(200);
-  } catch (error) {
-    console.error(error);
+  } catch (error) {;
     res.sendStatus(400);
   }
 }
 
 const deleteEmployee = async (req, res) => {
   try {
-    EmployeeFacade.checkData(employeeDataTesteUpdateDelete());
-    await dataBaseEmployee.deleteEmployee(employeeDataTesteUpdateDelete());
+    EmployeeFacade.checkData(req.body);
+    await dataBaseEmployee.deleteEmployee(req.body);
     res.sendStatus(200);
   } catch (error) {
-    console.error(error)
     res.sendStatus(404);
   }
 }
