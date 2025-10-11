@@ -1,5 +1,5 @@
 import { Router } from "express";
-import markController from './src/Controllers/MarkController.js';
+import markController from './Controllers/MarkController.js';
 const route = Router();
 
 route.get(`/register`, markController.insertMark);
