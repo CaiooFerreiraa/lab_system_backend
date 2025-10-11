@@ -1,10 +1,10 @@
-import { employeeData, employeeDataTesteUpdateDelete } from "../FakerDatas/employee.js";
+import { employeeDataRandom, employeeDataTesteUpdateDelete } from "../FakerDatas/employeeFake.js";
 import DatabaseEmployee from "../Models/DatabaseEmployee.js";
 const dataBaseEmployee = new DatabaseEmployee();
 
 const registerEmployee = async (req, res) => {
   try {
-    await dataBaseEmployee.createEmployee(employeeData());
+    await dataBaseEmployee.createEmployee(employeeDataRandom());
     res.sendStatus(200);
   } catch (err) {
     console.log(err);
