@@ -1,9 +1,11 @@
 import { employeeDataRandom, employeeDataTesteUpdateDelete } from "../FakerDatas/employeeFake.js";
 import DatabaseEmployee from "../Models/DatabaseEmployee.js";
+import EmployeeFacade from "../Facades/EmployeeFacade.js"
 const dataBaseEmployee = new DatabaseEmployee();
 
 const registerEmployee = async (req, res) => {
   try {
+    EmployeeFacade.checkData(employeeDataRandom());
     await dataBaseEmployee.createEmployee(employeeDataRandom());
     res.sendStatus(200);
   } catch (err) {
@@ -14,6 +16,7 @@ const registerEmployee = async (req, res) => {
 
 const viewsEmployee = async (req, res) => {
   try {
+    EmployeeFacade.checkData(employeeDataRandom());
     const employees = await dataBaseEmployee.readEmployees();
     res.send(employees);
   } catch (err) {
@@ -24,6 +27,7 @@ const viewsEmployee = async (req, res) => {
 
 const updateEmployee = async (req, res) => {
   try {
+    EmployeeFacade.checkData(employeeDataTesteUpdateDelete());
     await dataBaseEmployee.updateEmployeeAndPhoneNumber(employeeDataTesteUpdateDelete());
     res.sendStatus(200);
   } catch (error) {
@@ -34,6 +38,7 @@ const updateEmployee = async (req, res) => {
 
 const deleteEmployee = async (req, res) => {
   try {
+    EmployeeFacade.checkData(employeeDataTesteUpdateDelete());
     await dataBaseEmployee.deleteEmployee(employeeDataTesteUpdateDelete());
     res.sendStatus(200);
   } catch (error) {
