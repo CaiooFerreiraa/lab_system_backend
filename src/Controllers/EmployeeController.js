@@ -9,6 +9,7 @@ const registerEmployee = async (req, res) => {
     await dataBaseEmployee.createEmployee(req.body);
     res.sendStatus(200);
   } catch (err) {
+    console.error("Erro ao criar funcionário:", err);
     res.sendStatus(400);
   }
 };
