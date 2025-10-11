@@ -1,12 +1,17 @@
 import express from 'express'
-import route from './router.js'
+import route from './Routes/routes.js'
+import dotenv from 'dotenv'
+import cors from 'cors'
+dotenv.config()
 
 const app = express()
-const port = 5000;
+const port = process.env.PORT;
 
 app.use(express.json())
+app.use(cors({
+  origin: process.env.FRONTEND_URL
+}))
 app.use(express.urlencoded({extended: true}))
-app.use(express.static("./public"))
 app.use(route)
 
 app.listen(port, () => console.log("Servidor rodando"))
