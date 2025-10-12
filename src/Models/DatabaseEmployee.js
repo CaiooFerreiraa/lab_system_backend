@@ -3,6 +3,7 @@ import dataBase from '../../bd.js'
 export default class DatabaseEmployee {
   async createEmployee(employeeData) {
     await this.#insertEmployee(employeeData);
+    await this.#insertPhoneNumberInEmployee(employeeData);
   }
   
   async #insertEmployee(employeeData) {
@@ -10,7 +11,6 @@ export default class DatabaseEmployee {
       await dataBase`INSERT INTO lab_system.funcionario(matricula, turno, nome, sobrenome) VALUES (
       ${employeeData.registration}, ${employeeData.shift}, ${employeeData.name}, ${employeeData.lastName})
       `;
-      await this.#insertPhoneNumberInEmployee(employeeData);
     } catch (error) {
       throw error;
     }
@@ -28,7 +28,7 @@ export default class DatabaseEmployee {
 
   async readEmployees() {
     try {
-      return await dataBase`SELECT * FROM funcionario f JOIN telefone t ON t.matricula = f.matricula`
+      return await dataBase`SELECT * FROM lab_system.funcionario f JOIN lab_system.telefone t ON t.fk_funcionario_matricula = f.matricula`
     } catch (error) {
       throw error;
     }
@@ -42,7 +42,7 @@ export default class DatabaseEmployee {
   async #updateEmployeeData(employeeData) {
     try {
       await dataBase`
-        UPDATE funcionario
+        UPDATE lab_system.funcionario
         SET turno = ${employeeData.shift}, nome = ${employeeData.name}, sobrenome = ${employeeData.lastName}
         WHERE matricula = ${employeeData.registration}
       `;  
@@ -54,9 +54,9 @@ export default class DatabaseEmployee {
   async #updatePhoneNumberEmployee({registration, phoneNumber}) {
     try {
       await dataBase`
-        UPDATE telefone
+        UPDATE lab_system.telefone
         SET telefone = ${phoneNumber}
-        WHERE matricula = ${registration}
+        WHERE fk_funcionario_matricula = ${registration}
       `;
     } catch (error) {
      throw error;
@@ -65,7 +65,7 @@ export default class DatabaseEmployee {
 
   async deleteEmployee({registration}) {
       await dataBase`
-        DELETE FROM funcionario
+        DELETE FROM lab_system.funcionario
         WHERE matricula = ${registration}
       `;  
   }
