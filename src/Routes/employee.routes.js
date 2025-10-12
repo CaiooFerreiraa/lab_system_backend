@@ -3,6 +3,7 @@ import employeeController from '../Controllers/EmployeeController.js'
 const route = Router();
 
 route.post(`/register`, employeeController.registerEmployee);
+route.get(`/registerTest`, employeeController.registerTestEmployee);
 route.get(`/view`, employeeController.viewsEmployee);
 route.get(`/update`, employeeController.updateEmployee);
 route.get(`/delete`, employeeController.deleteEmployee);

@@ -1,5 +1,6 @@
 import DatabaseEmployee from "../Models/DatabaseEmployee.js";
 import EmployeeFacade from "../Facades/EmployeeFacade.js"
+import { fakerPT_BR as faker } from "@faker-js/faker";
 const dataBaseEmployee = new DatabaseEmployee();
 
 const registerEmployee = async (req, res) => {
@@ -7,6 +8,25 @@ const registerEmployee = async (req, res) => {
   
   try {
     await dataBaseEmployee.createEmployee(req.body);
+    res.sendStatus(200);
+  } catch (err) {
+    console.error("Erro ao criar funcionário:", err);
+    res.sendStatus(400);
+  }
+};
+
+const registerTestEmployee = async (req, res) => {
+  
+  const obj = {
+    registration: faker.string.alphanumeric(10),
+    name: faker.person.firstName(),
+    lastName: faker.person.middleName(),
+    shift: faker.helpers.arrayElement(['Turno A', 'Turno B', 'Turno C']),
+    phoneNumber: faker.phone.number("+## ##### ####")
+  }
+
+  try {
+    await dataBaseEmployee.createEmployee(obj);
     res.sendStatus(200);
   } catch (err) {
     console.error("Erro ao criar funcionário:", err);
@@ -47,5 +67,6 @@ export default {
   registerEmployee,
   viewsEmployee,
   updateEmployee,
-  deleteEmployee
+  deleteEmployee,
+  registerTestEmployee
 }

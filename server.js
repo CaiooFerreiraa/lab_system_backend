@@ -9,7 +9,7 @@ const port = process.env.PORT;
 
 app.use(express.json())
 app.use(cors({
-  origin: 'https://lab-system-frontend-roan.vercel.app',
+  origin: ['https://lab-system-frontend-roan.vercel.app', "http://localhost:5000"],
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
 }))
 app.use(express.urlencoded({extended: true}))
