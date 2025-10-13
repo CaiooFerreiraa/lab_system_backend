@@ -50,15 +50,3 @@ export default class EmployeeFacade {
     if (!isMobilePhone(phoneNumber, "pt-BR")) throw new Error("O telefone não está em padrão brasileiro");
   }
 }
-
-/**
- * 
- *   employeeData =  {
-    registration,
-    name,
-    lastName,
-    shift,
-    phoneNumber
-  }
- * 
- */
