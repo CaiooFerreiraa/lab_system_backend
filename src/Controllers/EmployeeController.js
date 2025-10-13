@@ -14,17 +14,8 @@ const registerEmployee = async (req, res) => {
 };
 
 const registerTestEmployee = async (req, res) => {
-  
-  const obj = {
-    registration: faker.string.alphanumeric(10),
-    name: faker.person.firstName(),
-    lastName: faker.person.middleName(),
-    shift: faker.helpers.arrayElement(['Turno A', 'Turno B', 'Turno C']),
-    phoneNumber: faker.phone.number("+## ##### ####")
-  }
-
   try {
-    await dataBaseEmployee.createEmployee(obj);
+    await dataBaseEmployee.createEmployee(req.body);
     res.sendStatus(200);
   } catch (err) {
     console.error("Erro ao criar funcionário:", err);

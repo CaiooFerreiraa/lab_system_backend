@@ -1,7 +1,5 @@
 import dataBase from '../../bd.js'
 
-const identifierDatabase = 'lab_system.'
-
 export default class DatabaseEmployee {
   async createEmployee(employeeData) {
     await this.#insertEmployee(employeeData);
@@ -10,7 +8,7 @@ export default class DatabaseEmployee {
   
   async #insertEmployee(employeeData) {
     try {
-      await dataBase`INSERT INTO ${identifierDatabase}funcionario(matricula, turno, nome, sobrenome) VALUES (
+      await dataBase`INSERT INTO lab_system.funcionario(matricula, turno, nome, sobrenome) VALUES (
       ${employeeData.registration}, ${employeeData.shift}, ${employeeData.name}, ${employeeData.lastName})
       `;
     } catch (error) {
@@ -20,7 +18,7 @@ export default class DatabaseEmployee {
 
   async #insertPhoneNumberInEmployee({ registration, phoneNumber }) {
     try {
-      await dataBase`INSERT INTO ${identifierDatabase}telefone(telefone, fk_funcionario_matricula) VALUES (
+      await dataBase`INSERT INTO lab_system.telefone(telefone, fk_funcionario_matricula) VALUES (
         ${phoneNumber}, ${registration})
       `;
     } catch (error) {
@@ -30,7 +28,7 @@ export default class DatabaseEmployee {
 
   async readEmployees() {
     try {
-      return await dataBase`SELECT * FROM ${identifierDatabase}funcionario f JOIN ${identifierDatabase}telefone t ON t.fk_funcionario_matricula = f.matricula`
+      return await dataBase`SELECT * FROM lab_system.funcionario f JOIN lab_system.telefone t ON t.fk_funcionario_matricula = f.matricula`
     } catch (error) {
       throw error;
     }
@@ -44,7 +42,7 @@ export default class DatabaseEmployee {
   async #updateEmployeeData(employeeData) {
     try {
       await dataBase`
-        UPDATE ${identifierDatabase}funcionario
+        UPDATE lab_system.funcionario
         SET turno = ${employeeData.shift}, nome = ${employeeData.name}, sobrenome = ${employeeData.lastName}
         WHERE matricula = ${employeeData.registration}
       `;  
@@ -56,7 +54,7 @@ export default class DatabaseEmployee {
   async #updatePhoneNumberEmployee({registration, phoneNumber}) {
     try {
       await dataBase`
-        UPDATE ${identifierDatabase}telefone
+        UPDATE lab_system.telefone
         SET telefone = ${phoneNumber}
         WHERE fk_funcionario_matricula = ${registration}
       `;
@@ -67,7 +65,7 @@ export default class DatabaseEmployee {
 
   async deleteEmployee({registration}) {
       await dataBase`
-        DELETE FROM ${identifierDatabase}funcionario
+        DELETE FROM lab_system.funcionario
         WHERE matricula = ${registration}
       `;  
   }
