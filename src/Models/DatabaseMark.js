@@ -9,6 +9,14 @@ export default class DatabaseMark {
     }
   }
 
+  async #insertMark() {
+
+  }
+
+  async #insertMetodoInMark() {
+    
+  }
+
   async readMark() {
     try {
       return await dataBase`SELECT * FROM lab_system.marca`;

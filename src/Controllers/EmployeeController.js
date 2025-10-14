@@ -1,10 +1,10 @@
 import DatabaseEmployee from "../Models/DatabaseEmployee.js";
 import EmployeeFacade from "../Facades/EmployeeFacade.js"
-import { fakerPT_BR as faker } from "@faker-js/faker";
 const dataBaseEmployee = new DatabaseEmployee();
 
 const registerEmployee = async (req, res) => {
   try {
+    EmployeeFacade.checkData(req.body);
     await dataBaseEmployee.createEmployee(req.body);
     res.sendStatus(200);
   } catch (err) {
@@ -25,6 +25,7 @@ const registerTestEmployee = async (req, res) => {
 
 const viewsEmployee = async (req, res) => {
   try {
+    EmployeeFacade.checkData(req.body);
     const employees = await dataBaseEmployee.readEmployees();
     res.send(employees);
   } catch (err) {
