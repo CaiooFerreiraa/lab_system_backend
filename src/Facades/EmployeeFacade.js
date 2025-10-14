@@ -1,6 +1,3 @@
-import validator from "validator";
-const { isMobilePhone } = validator;
-
 export default class EmployeeFacade {
   static checkData(employeeData) {
     try {
@@ -47,6 +44,5 @@ export default class EmployeeFacade {
   static #isValidPhoneNumber({phoneNumber}) {
     if (phoneNumber == null) throw new TypeError("O telefone está nulo");
     if (typeof(phoneNumber) != 'string') throw new TypeError("O número de telefone não é uma string");
-    if (!isMobilePhone(phoneNumber, "pt-BR")) throw new Error("O telefone não está em padrão brasileiro");
   }
 }
