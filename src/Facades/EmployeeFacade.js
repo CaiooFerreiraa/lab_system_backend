@@ -1,4 +1,20 @@
 export default class EmployeeFacade {
+  static formatDatasEmployees(employeeData) {
+    this.#isArray(employeeData);
+    const newEmployeeData = [];
+
+    employeeData.forEach(element => {
+      const {fk_funcionario_matricula, ...rest} = element
+      newEmployeeData.push(rest)
+    });
+
+    return newEmployeeData;
+  }
+
+  static #isArray(employeeData) {
+    if (!Array.isArray(employeeData)) throw new Error("Os dados lidos não estão em formato de array");
+  }
+
   static checkData(employeeData) {
     try {
       this.#isValidRegistration(employeeData)
@@ -10,12 +26,14 @@ export default class EmployeeFacade {
     }
   }
 
-  static #isValidRegistration({ registration }) {
+  static #isValidRegistration({registration}) {
+    console.log(registration);
+    
     if (registration == null) throw new TypeError("A matrícula está nula");
     if (typeof(registration) != "string") throw new TypeError("Matricula não é uma string");
   }
 
-  static #isValidFullName({ name, lastName }) {
+  static #isValidFullName({name, lastName}) {
     this.#validName(name);
     this.#validLastName(lastName);
   }
@@ -30,7 +48,7 @@ export default class EmployeeFacade {
     if (typeof(lastName) != 'string') throw new TypeError("O sobrenome não é uma string");
   }
 
-  static #isValidShift({ shift }) {
+  static #isValidShift({shift}) {
     if (shift == null) throw new TypeError("O valor do turno é nulo");
     if (typeof(shift) != 'string') throw new TypeError("O turno não é uma string");
     if (!this.#checkRangeShift(shift)) throw new RangeError("O valor do turno é inválido");

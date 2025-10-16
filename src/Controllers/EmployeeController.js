@@ -1,6 +1,6 @@
 import DatabaseEmployee from "../Models/DatabaseEmployee.js";
 import EmployeeFacade from "../Facades/EmployeeFacade.js"
-const dataBaseEmployee = new DatabaseEmployee();
+const dataBaseEmployee = new DatabaseEmployee()
 
 const registerEmployee = async (req, res) => {
   try {
@@ -25,10 +25,11 @@ const registerTestEmployee = async (req, res) => {
 
 const viewsEmployee = async (req, res) => {
   try {
-    EmployeeFacade.checkData(req.body);
-    const employees = await dataBaseEmployee.readEmployees();
-    res.send(employees);
+    const readsEmployees = await dataBaseEmployee.readEmployees();
+    const employeeData = EmployeeFacade.formatDatasEmployees(readsEmployees);
+    res.json(employeeData);
   } catch (err) {
+    console.error("Erro ao ler funcionário:", err);
     res.sendStatus(404);
   }
 };
@@ -39,6 +40,7 @@ const updateEmployee = async (req, res) => {
     await dataBaseEmployee.updateEmployeeAndPhoneNumber(req.body);
     res.sendStatus(200);
   } catch (error) {;
+    console.error("Erro ao atualizar funcionário:", err);
     res.sendStatus(400);
   }
 }
@@ -49,6 +51,7 @@ const deleteEmployee = async (req, res) => {
     await dataBaseEmployee.deleteEmployee(req.body);
     res.sendStatus(200);
   } catch (error) {
+    console.error("Erro ao deletar funcionário:", err);
     res.sendStatus(404);
   }
 }

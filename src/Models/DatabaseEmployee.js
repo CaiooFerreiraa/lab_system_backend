@@ -28,8 +28,10 @@ export default class DatabaseEmployee {
 
   async readEmployees() {
     try {
-      return await dataBase`SELECT * FROM lab_system.funcionario f JOIN lab_system.telefone t ON t.fk_funcionario_matricula = f.matricula`
+      const employeeData = await dataBase`SELECT * FROM lab_system.funcionario f JOIN lab_system.telefone t ON t.fk_funcionario_matricula = f.matricula`;
+      return employeeData;
     } catch (error) {
+      console.log(error);
       throw error;
     }
   }
