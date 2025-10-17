@@ -1,6 +1,12 @@
 import dataBase from '../../bd.js'
+import salveInCache from '../Utilities/cache.js';
 
 export default class DatabaseEmployee {
+  constructor() {
+    this.employeeDataTest;
+  }
+
+
   async createEmployee(employeeData) {
     await this.#insertEmployee(employeeData);
     await this.#insertPhoneNumberInEmployee(employeeData);
@@ -8,8 +14,10 @@ export default class DatabaseEmployee {
   
   async #insertEmployee(employeeData) {
     try {
-      await dataBase`INSERT INTO lab_system.funcionario(matricula, turno, nome, sobrenome) VALUES (
-      ${employeeData.registration}, ${employeeData.shift}, ${employeeData.name}, ${employeeData.lastName})
+
+      await dataBase`
+        INSERT INTO lab_system.funcionario(matricula, turno, nome, sobrenome) 
+        VALUES (${employeeData.registration}, ${employeeData.shift}, ${employeeData.name}, ${employeeData.lastName})
       `;
     } catch (error) {
       throw error;
@@ -18,8 +26,9 @@ export default class DatabaseEmployee {
 
   async #insertPhoneNumberInEmployee({ registration, phoneNumber }) {
     try {
-      await dataBase`INSERT INTO lab_system.telefone(telefone, fk_funcionario_matricula) VALUES (
-        ${phoneNumber}, ${registration})
+      await dataBase`
+        INSERT INTO lab_system.telefone(telefone, fk_funcionario_matricula) 
+        VALUES (${phoneNumber}, ${registration})
       `;
     } catch (error) {
       throw error;
@@ -28,10 +37,19 @@ export default class DatabaseEmployee {
 
   async readEmployees() {
     try {
-      const employeeData = await dataBase`SELECT * FROM lab_system.funcionario f JOIN lab_system.telefone t ON t.fk_funcionario_matricula = f.matricula`;
-      return employeeData;
+      if (typeof(this.employeeDataTest) == 'undefined') {
+        this.employeeDataTest = await dataBase`
+          SELECT nome, sobrenome, matricula, turno, telefone 
+          FROM lab_system.funcionario f 
+          JOIN lab_system.telefone t ON t.fk_funcionario_matricula = f.matricula
+        `;
+        salveInCache(this.employeeDataTest);
+      } else {
+        this.employeeDataTest = salveInCache();
+      }
+
+      return this.employeeDataTest;
     } catch (error) {
-      console.log(error);
       throw error;
     }
   }

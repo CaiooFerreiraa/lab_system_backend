@@ -1,20 +1,4 @@
 export default class EmployeeFacade {
-  static formatDatasEmployees(employeeData) {
-    this.#isArray(employeeData);
-    const newEmployeeData = [];
-
-    employeeData.forEach(element => {
-      const {fk_funcionario_matricula, ...rest} = element
-      newEmployeeData.push(rest)
-    });
-
-    return newEmployeeData;
-  }
-
-  static #isArray(employeeData) {
-    if (!Array.isArray(employeeData)) throw new Error("Os dados lidos não estão em formato de array");
-  }
-
   static checkData(employeeData) {
     try {
       this.#isValidRegistration(employeeData)
@@ -26,9 +10,7 @@ export default class EmployeeFacade {
     }
   }
 
-  static #isValidRegistration({registration}) {
-    console.log(registration);
-    
+  static #isValidRegistration({registration}) {    
     if (registration == null) throw new TypeError("A matrícula está nula");
     if (typeof(registration) != "string") throw new TypeError("Matricula não é uma string");
   }

@@ -13,21 +13,10 @@ const registerEmployee = async (req, res) => {
   }
 };
 
-const registerTestEmployee = async (req, res) => {
-  try {
-    await dataBaseEmployee.createEmployee(req.body);
-    res.sendStatus(200);
-  } catch (err) {
-    console.error("Erro ao criar funcionário:", err);
-    res.sendStatus(400);
-  }
-};
-
 const viewsEmployee = async (req, res) => {
   try {
     const readsEmployees = await dataBaseEmployee.readEmployees();
-    const employeeData = EmployeeFacade.formatDatasEmployees(readsEmployees);
-    res.json(employeeData);
+    res.json(readsEmployees);
   } catch (err) {
     console.error("Erro ao ler funcionário:", err);
     res.sendStatus(404);
@@ -60,6 +49,5 @@ export default {
   registerEmployee,
   viewsEmployee,
   updateEmployee,
-  deleteEmployee,
-  registerTestEmployee
+  deleteEmployee
 }
