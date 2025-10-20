@@ -1,12 +1,7 @@
 import dataBase from '../../bd.js'
-import salveInCache from '../Utilities/cache.js';
+import EmployeeFacade from '../Facades/EmployeeFacade.js';
 
 export default class DatabaseEmployee {
-  constructor() {
-    this.employeeDataTest;
-  }
-
-
   async createEmployee(employeeData) {
     await this.#insertEmployee(employeeData);
     await this.#insertPhoneNumberInEmployee(employeeData);
@@ -37,18 +32,15 @@ export default class DatabaseEmployee {
 
   async readEmployees() {
     try {
-      if (typeof(this.employeeDataTest) == 'undefined') {
-        this.employeeDataTest = await dataBase`
-          SELECT nome, sobrenome, matricula, turno, telefone 
-          FROM lab_system.funcionario f 
-          JOIN lab_system.telefone t ON t.fk_funcionario_matricula = f.matricula
-        `;
-        salveInCache(this.employeeDataTest);
-      } else {
-        this.employeeDataTest = salveInCache();
-      }
+      let employeeData = await dataBase`
+        SELECT nome, sobrenome, matricula, turno, telefone 
+        FROM lab_system.funcionario f 
+        JOIN lab_system.telefone t ON t.fk_funcionario_matricula = f.matricula
+      `;
 
-      return this.employeeDataTest;
+      employeeData = EmployeeFacade.formatFullName(employeeData);
+
+      return employeeData;
     } catch (error) {
       throw error;
     }
