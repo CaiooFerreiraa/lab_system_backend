@@ -10,7 +10,7 @@ const port = process.env.PORT;
 app.use(express.json());
 app.use(cors({
   origin: [
-    'https://lab-system-frontend-roan.vercel.app',
+    process.env.FRONTEND_URL,
     process.env.LOCALHOST
   ],
   methods: ['GET', 'POST', 'PUT', 'DELETE'],

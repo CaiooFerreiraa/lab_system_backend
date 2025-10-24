@@ -1,20 +1,12 @@
 export default class EmployeeFacade {
   static formatFullName(employeeData) {
-    const newEmployeeData = [];
-    employeeData.forEach(element => {
-      if (element) {
-        const {nome, sobrenome, matricula, turno, telefone} = element;
-
-        newEmployeeData.push({
-          nome: `${nome} ${sobrenome}`,
-          matricula,
-          turno,
-          telefone
-        })
+    return employeeData.map(element => ({
+        nome: `${element.nome} ${element.sobrenome}`,
+        matricula: element.matricula,
+        turno: element.turno,
+        telefone: element.telefone
       }
-    });
-
-    return newEmployeeData;
+    ));
   }
 
   static checkData(employeeData) {
@@ -28,7 +20,7 @@ export default class EmployeeFacade {
     }
   }
 
-  static #isValidRegistration({registration}) {    
+  static #isValidRegistration({registration}) {
     if (registration == null) throw new TypeError("A matrícula está nula");
     if (typeof registration != "string") throw new TypeError("Matricula não é uma string");
   }
@@ -49,14 +41,10 @@ export default class EmployeeFacade {
   }
 
   static #isValidShift({shift}) {
+    const shifts = ["Turno A", "Turno B", "Turno C"]
     if (shift == null) throw new TypeError("O valor do turno é nulo");
     if (typeof shift != 'string') throw new TypeError("O turno não é uma string");
-    if (!this.#checkRangeShift(shift)) throw new RangeError("O valor do turno é inválido");
-  }
-
-  static #checkRangeShift(shift) {
-    const shifts = ["Turno A", "Turno B", "Turno C"];
-    return shifts.find(element => shift == element);
+    if (!shifts.includes(shift)) throw new RangeError("O valor do turno é inválido");
   }
 
   static #isValidPhoneNumber({phoneNumber}) {

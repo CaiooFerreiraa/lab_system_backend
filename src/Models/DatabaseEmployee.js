@@ -1,7 +1,7 @@
 import dataBase from '../../bd.js'
-import EmployeeFacade from '../Facades/EmployeeFacade.js';
+import IEmployeeRepository from '../Interfaces/IEmployeeRepository.js';
 
-export default class DatabaseEmployee {
+export default class DatabaseEmployee extends IEmployeeRepository {
   async createEmployee(employeeData) {
     await this.#insertEmployee(employeeData);
     await this.#insertPhoneNumberInEmployee(employeeData);
@@ -38,8 +38,6 @@ export default class DatabaseEmployee {
         JOIN lab_system.telefone t ON t.fk_funcionario_matricula = f.matricula
       `;
 
-      employeeData = EmployeeFacade.formatFullName(employeeData);
-
       return employeeData;
     } catch (error) {
       throw error;
@@ -75,10 +73,29 @@ export default class DatabaseEmployee {
     }
   }
 
-  async deleteEmployee({registration}) {
+  async deleteEmployee(registration) {
+    try {
       await dataBase`
         DELETE FROM lab_system.funcionario
         WHERE matricula = ${registration}
       `;  
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async getEmployee(registration) {
+    try {
+      let employeeData = await dataBase`
+        SELECT nome, sobrenome, matricula, turno, telefone 
+        FROM lab_system.funcionario f 
+        JOIN lab_system.telefone t ON t.fk_funcionario_matricula = f.matricula
+        WHERE f.matricula = ${registration}
+      `;
+
+      return employeeData[0]
+    } catch (error) {
+      throw error
+    }
   }
 }

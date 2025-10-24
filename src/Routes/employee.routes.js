@@ -1,10 +1,15 @@
 import { Router } from "express";
-import employeeController from '../Controllers/EmployeeController.js'
+import EmployeeController from '../Controllers/EmployeeController.js'
+import DatabaseEmployee from '../Models/DatabaseEmployee.js'
 const route = Router();
 
-route.post(`/register`, employeeController.registerEmployee);
-route.get(`/view`, employeeController.viewsEmployee);
-route.post(`/update`, employeeController.updateEmployee);
-route.post(`/delete`, employeeController.deleteEmployee);
+const employeeRepository = new DatabaseEmployee()
+const employeeController = new EmployeeController(employeeRepository)
+
+route.post(`/register`, (req, res) => employeeController.registerEmployee(req, res));
+route.get(`/view`, (req, res) => employeeController.viewsAllEmployee(req, res));
+route.post(`/update`, (req, res) => employeeController.updateEmployee(req, res));
+route.post(`/delete/:registration`, (req, res) => employeeController.deleteEmployee(req, res));
+route.post('/resgater/:registration', (req, res) => employeeController.viewEmployee(req, res))
 
 export default route;
