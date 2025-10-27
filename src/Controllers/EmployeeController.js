@@ -7,7 +7,6 @@ export default class EmployeeController {
 
   async registerEmployee(req, res) {
     try {
-      console.log(req.body)
       EmployeeFacade.checkData(req.body);
       await this.employeeRepository.createEmployee(req.body);
       res.sendStatus(200);
