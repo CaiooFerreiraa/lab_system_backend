@@ -11,7 +11,7 @@ export default class MarkController {
       await this.markRepository.createMark(req.body);
       res.json({ok: 200, msg: "Marca cadastrada com sucesso"});
     } catch (error) {
-      res.json({ok: 400, msg: err.message});
+      res.json({ok: 400, msg: error.message});
     }
   }
 
@@ -20,7 +20,7 @@ export default class MarkController {
       const marks = await this.markRepository.readMark();
       const formatedMarks = MarkFacade.formatedMark(marks)
       res.send(formatedMarks);
-    } catch (error) {
+    } catch (err) {
       res.json({ok: 404, msg: err.message});
     }
   }
@@ -31,7 +31,7 @@ export default class MarkController {
       const mark = MarkFacade.filterMethods(req.body);
       await this.markRepository.updateMark(mark);
       res.json({ok: 200, msg: "Marca atualizada com sucesso"});
-    } catch (error) {
+    } catch (err) {
       res.json({ok: 400, msg: err.message});
     } 
   }
@@ -42,7 +42,7 @@ export default class MarkController {
       const mark = await this.markRepository.viewMarkForName(name);
       const formatedMark = MarkFacade.formatedMark(mark)
       res.send(formatedMark);
-    } catch (error) {
+    } catch (err) {
       res.json({ok: 404, msg: err.message});
     }
   }
@@ -52,7 +52,7 @@ export default class MarkController {
       const { name: marca } = req.params
       await this.markRepository.deleteMark(marca);
       res.json({ok: 200, msg: "Marca deletada com sucesso"});
-    } catch (error) {
+    } catch (err) {
       res.json({ok: 404, msg: err.message});
     }
   }
@@ -62,7 +62,7 @@ export default class MarkController {
       const { id } = req.params
       await this.markRepository.deleteMethod(id);
       res.json({ok: 200, msg: "Metodo deletado com sucesso"});
-    } catch (error) {
+    } catch (err) {
       res.json({ok: 404, msg: err.message});
     }
   }
