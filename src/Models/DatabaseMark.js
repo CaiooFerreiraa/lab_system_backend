@@ -17,7 +17,7 @@ export default class DatabaseMark extends IMarkRepository {
         this.#insertMethodInMark(cod_marca, metodo);
       })
     } catch (error) {
-      throw error;
+      throw new Error(error.message);
     }
   }
 
@@ -28,7 +28,7 @@ export default class DatabaseMark extends IMarkRepository {
         VALUES (${metodo.name}, ${metodo.description}, ${cod_marca})
       `;
     } catch (error) {
-      throw error;
+      throw new Error(error.message);
     }
   }
 
@@ -41,7 +41,7 @@ export default class DatabaseMark extends IMarkRepository {
       `
       return marks;
     } catch (error) {
-      throw error;
+      throw new Error(error.message);
     }
   }
 
@@ -54,7 +54,7 @@ export default class DatabaseMark extends IMarkRepository {
 
       return methods
     } catch (error) {
-      throw error;
+      throw new Error(error.message);
     }
   }
 

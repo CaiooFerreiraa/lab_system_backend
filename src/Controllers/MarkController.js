@@ -11,7 +11,7 @@ export default class MarkController {
       await this.markRepository.createMark(req.body);
       res.json({ok: 200, msg: "Marca cadastrada com sucesso"});
     } catch (error) {
-      res.json({ok: 400, msg: error.message});
+      res.json({ok: false, msg: error.message});
     }
   }
 
