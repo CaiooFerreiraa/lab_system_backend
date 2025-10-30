@@ -17,7 +17,6 @@ export default class DatabaseMark extends IMarkRepository {
         this.#insertMethodInMark(cod_marca, metodo);
       })
     } catch (error) {
-      console.error("Erro ao inserir marca:", error);
       throw error;
     }
   }
@@ -29,7 +28,6 @@ export default class DatabaseMark extends IMarkRepository {
         VALUES (${metodo.name}, ${metodo.description}, ${cod_marca})
       `;
     } catch (error) {
-      console.error("Erro ao inserir método:", error);
       throw error;
     }
   }
@@ -56,7 +54,6 @@ export default class DatabaseMark extends IMarkRepository {
 
       return methods
     } catch (error) {
-      console.error(error);
       throw error;
     }
   }
@@ -71,7 +68,7 @@ export default class DatabaseMark extends IMarkRepository {
       `
       return marks;
     } catch (error) {
-      throw error;
+      throw new Error("Nome da marca não encontrado");
     }
   }
 
@@ -82,8 +79,7 @@ export default class DatabaseMark extends IMarkRepository {
         this.#updateMethodInMark(cod_marca, metodo)
       })
     } catch (error) {
-      console.error(error);
-      throw error;
+      throw new Error(error.message);
     }
   }
 
@@ -96,7 +92,7 @@ export default class DatabaseMark extends IMarkRepository {
       `
       return cod_marca;
     } catch (error) {
-      throw error;
+      throw new Error("Nome da marca não encontrado");
     }
   }
 
@@ -112,8 +108,7 @@ export default class DatabaseMark extends IMarkRepository {
         `;
       }
     } catch (error) {
-      console.error("Erro ao inserir método:", error);
-      throw error;
+      throw new Error("Marca ou método inválidos");
     }
   }
 
@@ -124,7 +119,7 @@ export default class DatabaseMark extends IMarkRepository {
         WHERE nome = ${nome}
       `;
     } catch (error) {
-      throw error;
+      throw new Error("Nome da marca não encontrado");
     }
   }
   
@@ -135,8 +130,7 @@ export default class DatabaseMark extends IMarkRepository {
         WHERE cod_metodo = ${cod_metodo}
       `
     } catch (error) {
-      console.error(error);
-      throw error;
+      throw new Error("Método não encontrado");
     }
   }
 }

@@ -9,10 +9,9 @@ export default class MarkController {
     try {
       MarkFacade.checkData(req.body);
       await this.markRepository.createMark(req.body);
-      res.sendStatus(200);
+      res.json({ok: 200, msg: "Marca cadastrada com sucesso"});
     } catch (error) {
-      console.error(error)
-      res.sendStatus(400);
+      res.json({ok: 400, msg: err.message});
     }
   }
 
@@ -22,7 +21,7 @@ export default class MarkController {
       const formatedMarks = MarkFacade.formatedMark(marks)
       res.send(formatedMarks);
     } catch (error) {
-      res.sendStatus(404);
+      res.json({ok: 404, msg: err.message});
     }
   }
 
@@ -31,10 +30,9 @@ export default class MarkController {
       MarkFacade.checkData(req.body);
       const mark = MarkFacade.filterMethods(req.body);
       await this.markRepository.updateMark(mark);
-      res.sendStatus(200);
+      res.json({ok: 200, msg: "Marca atualizada com sucesso"});
     } catch (error) {
-      console.error(error)
-      res.sendStatus(400);
+      res.json({ok: 400, msg: err.message});
     } 
   }
 
@@ -45,7 +43,7 @@ export default class MarkController {
       const formatedMark = MarkFacade.formatedMark(mark)
       res.send(formatedMark);
     } catch (error) {
-      res.sendStatus(404)
+      res.json({ok: 404, msg: err.message});
     }
   }
 
@@ -53,9 +51,9 @@ export default class MarkController {
     try {
       const { name: marca } = req.params
       await this.markRepository.deleteMark(marca);
-      res.sendStatus(200);
+      res.json({ok: 200, msg: "Marca deletada com sucesso"});
     } catch (error) {
-      res.sendStatus(404);
+      res.json({ok: 404, msg: err.message});
     }
   }
 
@@ -63,9 +61,9 @@ export default class MarkController {
     try {
       const { id } = req.params
       await this.markRepository.deleteMethod(id);
-      res.sendStatus(200);
+      res.json({ok: 200, msg: "Metodo deletado com sucesso"});
     } catch (error) {
-      res.sendStatus(404);
+      res.json({ok: 404, msg: err.message});
     }
   }
 }

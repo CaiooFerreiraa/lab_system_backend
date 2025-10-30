@@ -9,10 +9,9 @@ export default class EmployeeController {
     try {
       EmployeeFacade.checkData(req.body);
       await this.employeeRepository.createEmployee(req.body);
-      res.sendStatus(200);
+      res.json({ok: 200, msg: "Funcionário cadastrado com sucesso"});
     } catch (err) {
-      console.error("Erro ao criar funcionário:", err);
-      res.sendStatus(400);
+      res.json({ok: 400, msg: err.message});
     }
   };
 
@@ -22,8 +21,7 @@ export default class EmployeeController {
       const dataEmployees = EmployeeFacade.formatFullName(readsEmployees);
       res.json(dataEmployees);
     } catch (err) {
-      console.error("Erro ao ler funcionário:", err);
-      res.sendStatus(404);
+      res.json({ok: 404, msg: err.message});
     }
   };
 
@@ -33,8 +31,7 @@ export default class EmployeeController {
       const readsEmployees = await this.employeeRepository.getEmployee(registration);
       res.json(readsEmployees);
     } catch (err) {
-      console.error("Erro ao ler funcionário:", err);
-      res.sendStatus(404);
+      res.json({ok: 404, msg: err.message});
     }
   };
 
@@ -42,10 +39,9 @@ export default class EmployeeController {
     try {
       EmployeeFacade.checkData(req.body);
       await this.employeeRepository.updateEmployeeAndPhoneNumber(req.body);
-      res.sendStatus(200);
+      res.json({ok: 200, msg: "Funcionário atualizado com sucesso"});
     } catch (error) {;
-      console.error("Erro ao atualizar funcionário:", error);
-      res.sendStatus(400);
+      res.json({ok: 400, msg: err.message});
     }
   }
 
@@ -53,10 +49,9 @@ export default class EmployeeController {
     try {
       const { registration } = req.params
       await this.employeeRepository.deleteEmployee(registration);
-      res.sendStatus(200);
+      res.json({ok: 200, msg: "Funcionário deletado com sucesso"});
     } catch (error) {
-      console.error("Erro ao deletar funcionário:", err);
-      res.sendStatus(404);
+      res.json({ok: 404, msg: err.message});
     }
   }
 }

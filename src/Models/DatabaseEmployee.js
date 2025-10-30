@@ -9,13 +9,12 @@ export default class DatabaseEmployee extends IEmployeeRepository {
   
   async #insertEmployee(employeeData) {
     try {
-
       await dataBase`
         INSERT INTO lab_system.funcionario(matricula, turno, nome, sobrenome) 
         VALUES (${employeeData.registration}, ${employeeData.shift}, ${employeeData.name}, ${employeeData.lastName})
       `;
-    } catch (error) {
-      throw error;
+    } catch (err) {
+      throw new Error("Matrícula já existente");
     }
   }
 
@@ -51,13 +50,15 @@ export default class DatabaseEmployee extends IEmployeeRepository {
 
   async #updateEmployeeData(employeeData) {
     try {
+      console.log(employeeData.shift)
+
       await dataBase`
         UPDATE lab_system.funcionario
         SET turno = ${employeeData.shift}, nome = ${employeeData.name}, sobrenome = ${employeeData.lastName}
         WHERE matricula = ${employeeData.registration}
       `;  
     } catch (error) {
-     throw error;
+     throw new Error("Matricula não encontrada");
     }
   }
   
@@ -69,7 +70,7 @@ export default class DatabaseEmployee extends IEmployeeRepository {
         WHERE fk_funcionario_matricula = ${registration}
       `;
     } catch (error) {
-     throw error;
+     throw new Error("Matricula não encontrada");
     }
   }
 
@@ -80,7 +81,7 @@ export default class DatabaseEmployee extends IEmployeeRepository {
         WHERE matricula = ${registration}
       `;  
     } catch (error) {
-      throw error;
+      throw new Error("Funcionário não encontrado");
     }
   }
 
@@ -95,7 +96,7 @@ export default class DatabaseEmployee extends IEmployeeRepository {
 
       return employeeData[0]
     } catch (error) {
-      throw error
+      throw new Error("Matrícula não encontrada")
     }
   }
 }
