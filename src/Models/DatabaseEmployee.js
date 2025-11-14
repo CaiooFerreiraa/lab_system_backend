@@ -1,6 +1,7 @@
 import dataBase from '../../bd.js'
+import IEmployeeRepository from '../Interfaces/IEmployeeRepository.js';
 
-export default class DatabaseEmployee {
+export default class DatabaseEmployee extends IEmployeeRepository {
   async createEmployee(employeeData) {
     await this.#insertEmployee(employeeData);
     await this.#insertPhoneNumberInEmployee(employeeData);
@@ -8,18 +9,20 @@ export default class DatabaseEmployee {
   
   async #insertEmployee(employeeData) {
     try {
-      await dataBase`INSERT INTO funcionario(matricula, turno, nome, sobrenome) VALUES (
-      ${employeeData.registration}, ${employeeData.shift}, ${employeeData.name}, ${employeeData.lastName})
+      await dataBase`
+        INSERT INTO lab_system.funcionario(matricula, turno, nome, sobrenome) 
+        VALUES (${employeeData.registration}, ${employeeData.shift}, ${employeeData.name}, ${employeeData.lastName})
       `;
-    } catch (error) {
-      throw error;
+    } catch (err) {
+      throw new Error("Matrícula já existente");
     }
   }
 
   async #insertPhoneNumberInEmployee({ registration, phoneNumber }) {
     try {
-      await dataBase`INSERT INTO telefone(matricula, telefone) VALUES (
-        ${registration}, ${phoneNumber})
+      await dataBase`
+        INSERT INTO lab_system.telefone(telefone, fk_funcionario_matricula) 
+        VALUES (${phoneNumber}, ${registration})
       `;
     } catch (error) {
       throw error;
@@ -28,7 +31,13 @@ export default class DatabaseEmployee {
 
   async readEmployees() {
     try {
-      return await dataBase`SELECT * FROM funcionario f JOIN telefone t ON t.matricula = f.matricula`
+      let employeeData = await dataBase`
+        SELECT nome, sobrenome, matricula, turno, telefone 
+        FROM lab_system.funcionario f 
+        JOIN lab_system.telefone t ON t.fk_funcionario_matricula = f.matricula
+      `;
+
+      return employeeData;
     } catch (error) {
       throw error;
     }
@@ -41,32 +50,53 @@ export default class DatabaseEmployee {
 
   async #updateEmployeeData(employeeData) {
     try {
+      console.log(employeeData.shift)
+
       await dataBase`
-        UPDATE funcionario
+        UPDATE lab_system.funcionario
         SET turno = ${employeeData.shift}, nome = ${employeeData.name}, sobrenome = ${employeeData.lastName}
         WHERE matricula = ${employeeData.registration}
       `;  
     } catch (error) {
-     throw error;
+     throw new Error("Matricula não encontrada");
     }
   }
   
   async #updatePhoneNumberEmployee({registration, phoneNumber}) {
     try {
       await dataBase`
-        UPDATE telefone
+        UPDATE lab_system.telefone
         SET telefone = ${phoneNumber}
-        WHERE matricula = ${registration}
+        WHERE fk_funcionario_matricula = ${registration}
       `;
     } catch (error) {
-     throw error;
+     throw new Error("Matricula não encontrada");
     }
   }
 
-  async deleteEmployee({registration}) {
+  async deleteEmployee(registration) {
+    try {
       await dataBase`
-        DELETE FROM funcionario
+        DELETE FROM lab_system.funcionario
         WHERE matricula = ${registration}
       `;  
+    } catch (error) {
+      throw new Error("Funcionário não encontrado");
+    }
+  }
+
+  async getEmployee(registration) {
+    try {
+      let employeeData = await dataBase`
+        SELECT nome, sobrenome, matricula, turno, telefone 
+        FROM lab_system.funcionario f 
+        JOIN lab_system.telefone t ON t.fk_funcionario_matricula = f.matricula
+        WHERE f.matricula = ${registration}
+      `;
+
+      return employeeData[0]
+    } catch (error) {
+      throw new Error("Matrícula não encontrada")
+    }
   }
 }
