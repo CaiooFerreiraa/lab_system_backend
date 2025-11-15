@@ -17,8 +17,14 @@ export default class ProductController {
     
   }
 
-  search(req, res) {
-
+  async search(req, res) {
+    try {
+      const uuid  = req.params.uuid;
+      const material = await this.productReporitory.search(uuid);
+      res.json({status: 200, material});
+    } catch (error) {
+      res.json({status: 400, msg: error.message});
+    }
   }
 
   edit(req, res) {

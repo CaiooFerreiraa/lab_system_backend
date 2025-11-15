@@ -3,9 +3,9 @@ export default class IProductRepository {
     this.db = db;
   }
 
-  registerProduction(product) {}
-  searchProduct(product) {}
-  editProduct(product) {}
-  deleteProduct(product) {}
-  readAllProduct() {}
+  register(product) {}
+  search(product) {}
+  edit(product) {}
+  delete(product) {}
+  readAll() {}
 }

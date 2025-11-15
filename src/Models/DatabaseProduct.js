@@ -11,15 +11,27 @@ export default class DatabaseProduct extends IProductRepository{
         INSERT INTO lab_system.material (code, type)
         VALUES (${code}, ${type})
       `
-
       return 200;
     } catch (error) {
-      throw new Error(error)
+      const msgError = error.message.split(" ");
+      if (msgError.includes('duplicate') && msgError.includes('key')) throw new Error(`Código ${code} já está cadastrado`);
     }
   }
 
-  searchProduct(product) {}
-  editProduct(product) {}
-  deleteProduct(product) {}
-  readAllProduct() {}
+  async search(code) {
+    try {
+      const material = await this.db`
+        SELECT code, type
+        FROM lab_system.material
+        WHERE code = ${code};
+      `
+
+      return material;
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  }
+  edit(product) {}
+  delete(product) {}
+  readAll() {}
 }
