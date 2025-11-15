@@ -9,7 +9,8 @@ const productController = new ProductController(productReporitory);
 
 route.post('/register', (req, res) => productController.register(req, res));
 route.get('/search/:uuid', (req, res) => productController.search(req, res));
-route.put('/edit/:uuid', (req, res) => productController.edit(req, res));
-route.delete('/delete/:uuid', (req, res) => productController.delete(req, res));
+route.put('/edit', (req, res) => productController.edit(req, res));
+route.delete('/delete', (req, res) => productController.delete(req, res));
+route.get('/read', (req, res) => productController.readAll(req, res));
 
 export default route;

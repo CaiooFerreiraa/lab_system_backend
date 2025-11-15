@@ -1,5 +1,4 @@
 import ProductFacade from "../Facades/ProductFacade.js"
-import fakeProduct from "../Models/fakeProduct.js"
 
 export default class ProductController {
   constructor(productReporitory) {
@@ -27,11 +26,32 @@ export default class ProductController {
     }
   }
 
-  edit(req, res) {
-
+  async edit(req, res) {
+    try {
+      const queryParams = req.query;
+      await this.productReporitory.edit(queryParams);
+      res.json({status: 200, msg: "Produto atualizado com sucesso"});
+    } catch (error) {
+      res.json({status: 400, msg: error.message});
+    }
   }
 
-  delete(req, res) {
+  async delete(req, res) {
+    try {
+      const queryParams = req.query;
+      await this.productReporitory.delete(queryParams);
+      res.json({status: 200, msg: "Produto deletado com sucesso"});
+    } catch (error) {
+      res.json({status: 400, msg: error.message});  
+    }
+  }
 
+  async readAll(req, res) {
+    try {
+      const materiais = await this.productReporitory.readAll();
+      res.json({status: 200, materiais});
+    } catch (error) {
+      res.json({status: 400, msg: error.message});
+    }
   }
 }

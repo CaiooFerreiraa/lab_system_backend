@@ -11,7 +11,6 @@ export default class DatabaseProduct extends IProductRepository{
         INSERT INTO lab_system.material (code, type)
         VALUES (${code}, ${type})
       `
-      return 200;
     } catch (error) {
       const msgError = error.message.split(" ");
       if (msgError.includes('duplicate') && msgError.includes('key')) throw new Error(`Código ${code} já está cadastrado`);
@@ -25,13 +24,44 @@ export default class DatabaseProduct extends IProductRepository{
         FROM lab_system.material
         WHERE code = ${code};
       `
-
       return material;
     } catch (error) {
       throw new Error(error.message);
     }
   }
-  edit(product) {}
-  delete(product) {}
-  readAll() {}
+  
+  async edit({uuid, newcode}) {
+    try {
+      await this.db`
+        UPDATE lab_system.material
+        SET code = ${newcode}
+        WHERE code = ${uuid}
+      `
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  }
+  
+  async delete({uuid}) {
+    try {
+      await this.db`
+        DELETE FROM lab_system.material
+        WHERE code = ${uuid}
+      `;
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  }
+  
+  async readAll() {
+    try {
+      const materiais = await this.db`
+        SELECT code, type
+        FROM lab_system.material
+      `
+      return materiais;
+    } catch (error) {
+      throw new Error(error.message)
+    }
+  }
 }
