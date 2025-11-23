@@ -1,14 +1,17 @@
-import dataBase from "../../bd.js";
-import IMarkRepository from "../Interfaces/IMarkRepository.js";
+import IDatabase from "../Interfaces/IDatabase.js";
 
-export default class DatabaseMark extends IMarkRepository {
-  async createMark(dataMark) {
+export default class DatabaseMark extends IDatabase {
+  constructor(db) {
+    super(db)
+  }
+
+  async register(dataMark) {
     await this.#insertMark(dataMark);
   }
 
   async #insertMark({ marca, metodos }) {
     try {
-      const [{cod_marca}] = await dataBase`
+      const [{cod_marca}] = await this.db`
         INSERT INTO lab_system.marca (nome)
         VALUES (${marca})
         RETURNING cod_marca 
@@ -23,7 +26,7 @@ export default class DatabaseMark extends IMarkRepository {
 
   async #insertMethodInMark(cod_marca, metodo) {
     try {
-      await dataBase`
+      await this.db`
         INSERT INTO lab_system.metodo (nome, descricao, fk_marca_cod_marca)
         VALUES (${metodo.name}, ${metodo.description}, ${cod_marca})
       `;
@@ -32,9 +35,9 @@ export default class DatabaseMark extends IMarkRepository {
     }
   }
 
-  async readMark() {
+  async readAll() {
     try {
-      const marks = await dataBase`
+      const marks = await this.db`
         SELECT a.nome as Marca, b.nome as Metodo, b.descricao as Descrição, b.cod_metodo
         FROM lab_system.marca a
         LEFT JOIN lab_system.metodo b ON a.cod_marca = b.fk_marca_cod_marca
@@ -47,7 +50,7 @@ export default class DatabaseMark extends IMarkRepository {
 
   async readMethod() {
     try {
-      const methods = await dataBase`
+      const methods = await this.db`
         SELECT nome, descricao 
         FROM lab_system.metodo
       `;
@@ -60,7 +63,7 @@ export default class DatabaseMark extends IMarkRepository {
 
   async viewMarkForName(nome) {
     try {
-      const marks = await dataBase`
+      const marks = await this.db`
         SELECT a.nome as marca, b.nome as metodo, b.descricao as descrição, b.cod_metodo
         FROM lab_system.marca a
         LEFT JOIN lab_system.metodo b ON a.cod_marca = b.fk_marca_cod_marca
@@ -72,7 +75,7 @@ export default class DatabaseMark extends IMarkRepository {
     }
   }
 
-  async updateMark({marca, metodo = []}) {
+  async edit({marca, metodo = []}) {
     try {
       const cod_marca = await this.#getCodMarca(marca)
       metodo.forEach(metodo => {
@@ -85,7 +88,7 @@ export default class DatabaseMark extends IMarkRepository {
 
   async #getCodMarca(marca) {
     try {
-      const [{cod_marca}] = await dataBase`
+      const [{cod_marca}] = await this.db`
         SELECT cod_marca
         FROM lab_system.marca
         WHERE nome = ${marca} 
@@ -101,7 +104,7 @@ export default class DatabaseMark extends IMarkRepository {
       if (metodo.cod_metodo == null) {
         await this.#insertMethodInMark(cod_marca, {name: metodo.nome, description: metodo.descricao})
       } else {
-        await dataBase`
+        await this.db`
           UPDATE lab_system.metodo
           SET nome = ${metodo.nome}, descricao = ${metodo.descricao}
           WHERE fk_marca_cod_marca = ${cod_marca} and cod_metodo = ${metodo.cod_metodo};
@@ -112,9 +115,9 @@ export default class DatabaseMark extends IMarkRepository {
     }
   }
 
-  async deleteMark(nome) {
+  async delete(nome) {
     try {
-      await dataBase`
+      await this.db`
         DELETE FROM lab_system.marca
         WHERE nome = ${nome}
       `;
@@ -125,7 +128,7 @@ export default class DatabaseMark extends IMarkRepository {
   
   async deleteMethod(cod_metodo) {
     try {
-      await dataBase`
+      await this.db`
         DELETE FROM lab_system.metodo
         WHERE cod_metodo = ${cod_metodo}
       `

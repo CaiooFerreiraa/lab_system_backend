@@ -8,7 +8,7 @@ export default class EmployeeController {
   async registerEmployee(req, res) {
     try {
       EmployeeFacade.checkData(req.body);
-      await this.employeeRepository.createEmployee(req.body);
+      await this.employeeRepository.register(req.body);
       res.json({ok: 200, msg: "Funcionário cadastrado com sucesso"});
     } catch (err) {
       res.json({ok: 400, msg: err.message});
@@ -17,7 +17,7 @@ export default class EmployeeController {
 
   async viewsAllEmployee(req, res) {
     try {
-      const readsEmployees = await this.employeeRepository.readEmployees();
+      const readsEmployees = await this.employeeRepository.readAll();
       const dataEmployees = EmployeeFacade.formatFullName(readsEmployees);
       res.json(dataEmployees);
     } catch (err) {
@@ -38,7 +38,7 @@ export default class EmployeeController {
   async updateEmployee(req, res) {
     try {
       EmployeeFacade.checkData(req.body);
-      await this.employeeRepository.updateEmployeeAndPhoneNumber(req.body);
+      await this.employeeRepository.edit(req.body);
       res.json({ok: 200, msg: "Funcionário atualizado com sucesso"});
     } catch (error) {;
       res.json({ok: 400, msg: err.message});
@@ -48,7 +48,7 @@ export default class EmployeeController {
   async deleteEmployee(req, res) {
     try {
       const { registration } = req.params
-      await this.employeeRepository.deleteEmployee(registration);
+      await this.employeeRepository.delete(registration);
       res.json({ok: 200, msg: "Funcionário deletado com sucesso"});
     } catch (error) {
       res.json({ok: 404, msg: err.message});

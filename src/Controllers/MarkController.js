@@ -8,7 +8,7 @@ export default class MarkController {
   async insertMark(req, res) {
     try {
       MarkFacade.checkData(req.body);
-      await this.markRepository.createMark(req.body);
+      await this.markRepository.register(req.body);
       res.json({ok: 200, msg: "Marca cadastrada com sucesso"});
     } catch (error) {
       res.json({ok: false, msg: error.message});
@@ -17,7 +17,7 @@ export default class MarkController {
 
   async viewMarks(req, res) {
     try {
-      const marks = await this.markRepository.readMark();
+      const marks = await this.markRepository.readAll();
       const formatedMarks = MarkFacade.formatedMark(marks)
       res.send(formatedMarks);
     } catch (err) {
@@ -29,7 +29,7 @@ export default class MarkController {
     try {
       MarkFacade.checkData(req.body);
       const mark = MarkFacade.filterMethods(req.body);
-      await this.markRepository.updateMark(mark);
+      await this.markRepository.edit(mark);
       res.json({ok: 200, msg: "Marca atualizada com sucesso"});
     } catch (err) {
       res.json({ok: 400, msg: err.message});
@@ -50,7 +50,7 @@ export default class MarkController {
   async deleteMark(req, res) {
     try {
       const { name: marca } = req.params
-      await this.markRepository.deleteMark(marca);
+      await this.markRepository.delete(marca);
       res.json({ok: 200, msg: "Marca deletada com sucesso"});
     } catch (err) {
       res.json({ok: 404, msg: err.message});

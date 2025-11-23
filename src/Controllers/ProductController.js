@@ -13,7 +13,6 @@ export default class ProductController {
     } catch (error) {
       res.json({status: 400, msg: error.message})
     }
-    
   }
 
   async search(req, res) {
@@ -49,7 +48,7 @@ export default class ProductController {
   async readAll(req, res) {
     try {
       const materiais = await this.productReporitory.readAll();
-      res.json({status: 200, materiais});
+      res.json(materiais);
     } catch (error) {
       res.json({status: 400, msg: error.message});
     }

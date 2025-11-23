@@ -1,9 +1,10 @@
 import { Router } from "express";
 import EmployeeController from '../Controllers/EmployeeController.js'
 import DatabaseEmployee from '../Models/DatabaseEmployee.js'
+import db from "../../bd.js";
 const route = Router();
 
-const employeeRepository = new DatabaseEmployee()
+const employeeRepository = new DatabaseEmployee(db)
 const employeeController = new EmployeeController(employeeRepository)
 
 // Jocielle, Eick, Douglas

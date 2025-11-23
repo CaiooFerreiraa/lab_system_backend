@@ -1,28 +1,28 @@
-import IProductRepository from "../Interfaces/IProductRepository.js";
+import IDatabase from "../Interfaces/IDatabase.js";
 
-export default class DatabaseProduct extends IProductRepository{
+export default class DatabaseProduct extends IDatabase {
   constructor(db) {
     super(db)
   }
 
-  async register({code, type}) {
+  async register({referencia, tipo}) {
     try {
       await this.db`
-        INSERT INTO lab_system.material (code, type)
-        VALUES (${code}, ${type})
+        INSERT INTO lab_system.material (referencia, tipo)
+        VALUES (${referencia}, ${tipo})
       `
     } catch (error) {
       const msgError = error.message.split(" ");
-      if (msgError.includes('duplicate') && msgError.includes('key')) throw new Error(`Código ${code} já está cadastrado`);
+      if (msgError.includes('duplicate') && msgError.includes('key')) throw new Error(`Código ${referencia} já está cadastrado`);
     }
   }
 
-  async search(code) {
+  async search(referencia) {
     try {
       const material = await this.db`
-        SELECT code, type
+        SELECT referencia, tipo
         FROM lab_system.material
-        WHERE code = ${code};
+        WHERE referencia = ${referencia};
       `
       return material;
     } catch (error) {
@@ -34,8 +34,8 @@ export default class DatabaseProduct extends IProductRepository{
     try {
       await this.db`
         UPDATE lab_system.material
-        SET code = ${newcode}
-        WHERE code = ${uuid}
+        SET referencia = ${newcode}
+        WHERE referencia = ${uuid}
       `
     } catch (error) {
       throw new Error(error.message);
@@ -46,7 +46,7 @@ export default class DatabaseProduct extends IProductRepository{
     try {
       await this.db`
         DELETE FROM lab_system.material
-        WHERE code = ${uuid}
+        WHERE referencia = ${uuid}
       `;
     } catch (error) {
       throw new Error(error.message);
@@ -56,7 +56,7 @@ export default class DatabaseProduct extends IProductRepository{
   async readAll() {
     try {
       const materiais = await this.db`
-        SELECT code, type
+        SELECT referencia, tipo
         FROM lab_system.material
       `
       return materiais;

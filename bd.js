@@ -3,6 +3,6 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const connectString = process.env.DATABASE_URL;
-const sql = neon(connectString);
+const db = neon(connectString);
 
-export default sql;
+export default db;

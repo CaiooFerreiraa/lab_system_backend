@@ -1,9 +1,10 @@
 import { Router } from "express";
 import MarkController from '../Controllers/MarkController.js';
 import DatabaseMark from '../Models/DatabaseMark.js';
+import db from "../../bd.js";
 const route = Router();
 
-const markRepository = new DatabaseMark();
+const markRepository = new DatabaseMark(db);
 const markController = new MarkController(markRepository);
 
 // Jocielle e Caio

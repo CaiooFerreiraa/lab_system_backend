@@ -1,15 +1,18 @@
-import dataBase from '../../bd.js'
-import IEmployeeRepository from '../Interfaces/IEmployeeRepository.js';
+import IDatabase from '../Interfaces/IDatabase.js';
 
-export default class DatabaseEmployee extends IEmployeeRepository {
-  async createEmployee(employeeData) {
+export default class DatabaseEmployee extends IDatabase {
+  constructor(db) {
+    super(db)
+  }
+
+  async register(employeeData) {
     await this.#insertEmployee(employeeData);
     await this.#insertPhoneNumberInEmployee(employeeData);
   }
   
   async #insertEmployee(employeeData) {
     try {
-      await dataBase`
+      await this.db`
         INSERT INTO lab_system.funcionario(matricula, turno, nome, sobrenome) 
         VALUES (${employeeData.registration}, ${employeeData.shift}, ${employeeData.name}, ${employeeData.lastName})
       `;
@@ -20,7 +23,7 @@ export default class DatabaseEmployee extends IEmployeeRepository {
 
   async #insertPhoneNumberInEmployee({ registration, phoneNumber }) {
     try {
-      await dataBase`
+      await this.db`
         INSERT INTO lab_system.telefone(telefone, fk_funcionario_matricula) 
         VALUES (${phoneNumber}, ${registration})
       `;
@@ -29,9 +32,9 @@ export default class DatabaseEmployee extends IEmployeeRepository {
     }
   }
 
-  async readEmployees() {
+  async readAll() {
     try {
-      let employeeData = await dataBase`
+      let employeeData = await this.db`
         SELECT nome, sobrenome, matricula, turno, telefone 
         FROM lab_system.funcionario f 
         JOIN lab_system.telefone t ON t.fk_funcionario_matricula = f.matricula
@@ -43,7 +46,7 @@ export default class DatabaseEmployee extends IEmployeeRepository {
     }
   }
 
-  async updateEmployeeAndPhoneNumber(employeeData) {
+  async edit(employeeData) {
     await this.#updateEmployeeData(employeeData);
     await this.#updatePhoneNumberEmployee(employeeData);
   }
@@ -52,7 +55,7 @@ export default class DatabaseEmployee extends IEmployeeRepository {
     try {
       console.log(employeeData.shift)
 
-      await dataBase`
+      await this.db`
         UPDATE lab_system.funcionario
         SET turno = ${employeeData.shift}, nome = ${employeeData.name}, sobrenome = ${employeeData.lastName}
         WHERE matricula = ${employeeData.registration}
@@ -64,7 +67,7 @@ export default class DatabaseEmployee extends IEmployeeRepository {
   
   async #updatePhoneNumberEmployee({registration, phoneNumber}) {
     try {
-      await dataBase`
+      await this.db`
         UPDATE lab_system.telefone
         SET telefone = ${phoneNumber}
         WHERE fk_funcionario_matricula = ${registration}
@@ -74,9 +77,9 @@ export default class DatabaseEmployee extends IEmployeeRepository {
     }
   }
 
-  async deleteEmployee(registration) {
+  async delete(registration) {
     try {
-      await dataBase`
+      await this.db`
         DELETE FROM lab_system.funcionario
         WHERE matricula = ${registration}
       `;  
@@ -87,7 +90,7 @@ export default class DatabaseEmployee extends IEmployeeRepository {
 
   async getEmployee(registration) {
     try {
-      let employeeData = await dataBase`
+      let employeeData = await this.db`
         SELECT nome, sobrenome, matricula, turno, telefone 
         FROM lab_system.funcionario f 
         JOIN lab_system.telefone t ON t.fk_funcionario_matricula = f.matricula

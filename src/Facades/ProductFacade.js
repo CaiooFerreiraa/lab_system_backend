@@ -4,15 +4,15 @@ export default class ProductFacade {
     this.#typeIsValid(data);  
   }
 
-  static #codeIsValid({code}) {
-    if (code === null) throw new Error("O código está nulo");
-    if (typeof code !== 'string') throw new Error("O codigo não é uma string"); 
+  static #codeIsValid({referencia}) {
+    if (referencia === null) throw new Error("O código está nulo");
+    if (typeof referencia !== 'string') throw new Error("O codigo não é uma string"); 
   }
 
-  static #typeIsValid({type}) {
+  static #typeIsValid({tipo}) {
     const arrayOfType = ["BN", 'DN', 'Base']
 
-    if (type === null) throw new Error("O tipo está nulo");
-    if (!arrayOfType.includes(type)) throw new Error("O tipo é inválido");
+    if (tipo === null) throw new Error("O tipo está nulo");
+    if (!arrayOfType.includes(tipo)) throw new Error("O tipo é inválido");
   }
 }
