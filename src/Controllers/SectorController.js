@@ -4,6 +4,51 @@ export default class SectorController {
   }
 
   async register(req, res) {
-    
+    try {
+      console.log(req.body)
+      await this.sectorRepository.register(req.body)
+    } catch (error) {
+      res.json({ok: 400, msg: error.message})
+    }
+  }
+
+  async search(req, res) {
+    try {
+      const setor = await this.sectorRepository.search(req.query.uuid)
+      res.json({ok: 200, setor});
+    } catch (error) {
+      res.json({ok: 404});
+    }
+  }
+
+  async edit(req, res) {
+    try {
+      const oldName = req.query.oldName;
+      const newName = req.query.newName;
+      await this.sectorRepository.edit(oldName, newName);
+
+      res.json({ok: 200, msg: "Cadastrado com sucesso"});
+    } catch (error) {
+      res.json({ok: 400, msg: error.message})
+    }
+  }
+
+  async delete(req, res) {
+    try {
+      const nome = req.query.uuid;
+      await this.sectorRepository.delete(nome);
+      res.json({ok: 200, msg: "Setor deletado com sucesso!"})
+    } catch (error) {
+      res.json({ok: 400, msg: error.message})
+    }
+  }
+
+  async readAll(req, res) {
+    try {
+      const setores = await this.sectorRepository.readAll()
+      res.json({ok: 200, setores})
+    } catch (error) {
+      throw new Error(error.message)
+    }
   }
 }

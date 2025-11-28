@@ -5,15 +5,30 @@ export default class DatabaseProduct extends IDatabase {
     super(db)
   }
 
-  async register({referencia, tipo}) {
+  async register({referencia, tipo, setor}) {
     try {
+      const cod_setor = await this.#getSectorForName(setor);
       await this.db`
-        INSERT INTO lab_system.material (referencia, tipo)
-        VALUES (${referencia}, ${tipo})
-      `
+        INSERT INTO lab_system.material (referencia, tipo, cod_setor)
+        VALUES (${referencia}, ${tipo}, ${cod_setor})
+      `;
     } catch (error) {
       const msgError = error.message.split(" ");
       if (msgError.includes('duplicate') && msgError.includes('key')) throw new Error(`Código ${referencia} já está cadastrado`);
+      throw new Error(error.message)
+    }
+  }
+
+  async #getSectorForName(setor) {
+    try {
+      const [{id}] = await this.db`
+        SELECT id
+        FROM lab_system.setor
+        WHERE nome = ${setor};
+      `
+      return id
+    } catch (error) {
+      throw new Error(error.message)
     }
   }
 
