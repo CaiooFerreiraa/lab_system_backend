@@ -66,4 +66,22 @@ export default class MarkController {
       res.json({ok: 404, msg: err.message});
     }
   }
+
+  async list(req, res) {
+    try {
+      const types = await this.markRepository.listTypeTest()
+      res.json({ok: 200, types})
+    } catch (error) {
+      res.json({ok: 404, msg: error.message});
+    }
+  }
+
+  async listTypeShoes(req, res) {
+    try {
+      const types = await this.markRepository.listTypeShoes()
+      res.json({ok: 200, types})
+    } catch (error) {
+      res.json({ok: 404, msg: error.message});
+    }
+  }
 }
