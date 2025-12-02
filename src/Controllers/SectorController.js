@@ -5,8 +5,8 @@ export default class SectorController {
 
   async register(req, res) {
     try {
-      console.log(req.body)
       await this.sectorRepository.register(req.body)
+      res.json({ok: 200, msg: "Setor registrado com sucesso!"})
     } catch (error) {
       res.json({ok: 400, msg: error.message})
     }
@@ -35,7 +35,7 @@ export default class SectorController {
 
   async delete(req, res) {
     try {
-      const nome = req.query.uuid;
+      const { nome } = req.query;
       await this.sectorRepository.delete(nome);
       res.json({ok: 200, msg: "Setor deletado com sucesso!"})
     } catch (error) {

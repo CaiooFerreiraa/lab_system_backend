@@ -17,7 +17,7 @@ export default class ProductController {
 
   async search(req, res) {
     try {
-      const uuid  = req.params.uuid;
+      const { uuid }  = req.query;
       const material = await this.productReporitory.search(uuid);
       res.json({status: 200, material});
     } catch (error) {
@@ -28,6 +28,7 @@ export default class ProductController {
   async edit(req, res) {
     try {
       const queryParams = req.query;
+      console.log(queryParams)
       await this.productReporitory.edit(queryParams);
       res.json({status: 200, msg: "Produto atualizado com sucesso"});
     } catch (error) {
@@ -49,6 +50,16 @@ export default class ProductController {
     try {
       const materiais = await this.productReporitory.readAll();
       res.json(materiais);
+    } catch (error) {
+      res.json({status: 400, msg: error.message});
+    }
+  }
+
+  async readProducts(req, res) {
+    try {
+      const {setor} = req.queryParams
+      const materiais = await this.productReporitory.list();
+      res.json(materiais)
     } catch (error) {
       res.json({status: 400, msg: error.message});
     }

@@ -35,9 +35,10 @@ export default class DatabaseProduct extends IDatabase {
   async search(referencia) {
     try {
       const material = await this.db`
-        SELECT referencia, tipo
-        FROM lab_system.material
-        WHERE referencia = ${referencia};
+        SELECT a.referencia, a.tipo, b.nome as setor
+        FROM lab_system.material a
+        JOIN lab_system.setor b ON a.cod_setor = b.id
+        WHERE a.referencia = ${referencia};
       `
       return material;
     } catch (error) {
@@ -45,11 +46,13 @@ export default class DatabaseProduct extends IDatabase {
     }
   }
   
-  async edit({uuid, newcode}) {
+  async edit({uuid, newcode, newsector}) {
     try {
+      const cod_setor = await this.#getSectorForName(newsector)
+
       await this.db`
         UPDATE lab_system.material
-        SET referencia = ${newcode}
+        SET referencia = ${newcode}, cod_setor = ${cod_setor}
         WHERE referencia = ${uuid}
       `
     } catch (error) {
@@ -57,11 +60,12 @@ export default class DatabaseProduct extends IDatabase {
     }
   }
   
-  async delete({uuid}) {
+  async delete({uuid, setor}) {
     try {
+      const cod_setor = await this.#getSectorForName(setor)
       await this.db`
         DELETE FROM lab_system.material
-        WHERE referencia = ${uuid}
+        WHERE referencia = ${uuid} AND cod_setor = ${cod_setor}
       `;
     } catch (error) {
       throw new Error(error.message);
@@ -71,9 +75,25 @@ export default class DatabaseProduct extends IDatabase {
   async readAll() {
     try {
       const materiais = await this.db`
-        SELECT referencia, tipo
-        FROM lab_system.material
+        SELECT a.referencia, a.tipo, b.nome as setor
+        FROM lab_system.material a
+        JOIN lab_system.setor b ON a.cod_setor = b.id;
       `
+      return materiais;
+    } catch (error) {
+      throw new Error(error.message)
+    }
+  }
+
+  async readProducts(nome) {
+    try {
+      const materiais = await this.db`
+        SELECT a.referencia, a.tipo
+        FROM lab_system.material a
+        JOIN lab_system.setor b ON a.cod_setor = b.id
+        WHERE b.nome = ${nome};
+      `
+
       return materiais;
     } catch (error) {
       throw new Error(error.message)

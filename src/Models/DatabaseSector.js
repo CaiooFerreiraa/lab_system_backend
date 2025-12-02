@@ -12,6 +12,8 @@ export default class DatabaseSector extends IDatabase {
         VALUES (${nome})
       `
     } catch (error) {
+      const msgError = error.message.split(" ");
+      if (msgError.includes('duplicate') && msgError.includes('key')) throw new Error(`Setor ${nome} já está cadastrado`);
       throw new Error(error.message);
     }
   }
@@ -32,7 +34,7 @@ export default class DatabaseSector extends IDatabase {
   async edit(oldName, newName) {
     try {
       await this.db`
-        UPDATE lab_sysrtem.setor
+        UPDATE lab_system.setor
         SET nome = ${newName}
         WHERE nome = ${oldName}
       `
@@ -55,7 +57,7 @@ export default class DatabaseSector extends IDatabase {
   async readAll() {
     try {
       const setores = await this.db`
-        SELECT *
+        SELECT nome
         FROM lab_system.setor
       `;
 

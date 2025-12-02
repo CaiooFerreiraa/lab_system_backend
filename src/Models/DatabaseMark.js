@@ -27,7 +27,7 @@ export default class DatabaseMark extends IDatabase {
   async #insertMethodInMark(cod_marca, metodo) {
     try {
       await this.db`
-        INSERT INTO lab_system.metodo (nome, descricao, fk_marca_cod_marca)
+        INSERT INTO lab_system.metodo (nome, descricao, cod_marca)
         VALUES (${metodo.name}, ${metodo.description}, ${cod_marca})
       `;
     } catch (error) {
@@ -40,7 +40,7 @@ export default class DatabaseMark extends IDatabase {
       const marks = await this.db`
         SELECT a.nome as Marca, b.nome as Metodo, b.descricao as Descrição, b.cod_metodo
         FROM lab_system.marca a
-        LEFT JOIN lab_system.metodo b ON a.cod_marca = b.fk_marca_cod_marca
+        LEFT JOIN lab_system.metodo b ON a.cod_marca = b.cod_marca
       `
       return marks;
     } catch (error) {

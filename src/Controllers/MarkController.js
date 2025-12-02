@@ -19,7 +19,7 @@ export default class MarkController {
     try {
       const marks = await this.markRepository.readAll();
       const formatedMarks = MarkFacade.formatedMark(marks)
-      res.send(formatedMarks);
+      res.json(formatedMarks);
     } catch (err) {
       res.json({ok: 404, msg: err.message});
     }
