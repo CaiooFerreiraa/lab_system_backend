@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon server.js",
+    "dev": "nodemon server.js --ignore Utilities/",
     "start": "node server.js",
     "build": "echo \"No build step required\""
   },
@@ -22,12 +22,12 @@
   "homepage": "https://github.com/CaiooFerreiraa/lab_system_backend#readme",
   "description": "",
   "dependencies": {
+    "@neondatabase/serverless": "^1.0.2",
     "@supabase/supabase-js": "^2.58.0",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
     "express": "^5.1.0",
     "nodemon": "^3.1.10",
-    "postgres": "^3.4.7",
     "validator": "^10.10.0"
   },
   "devDependencies": {

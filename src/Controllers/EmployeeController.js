@@ -1,51 +1,57 @@
-import DatabaseEmployee from "../Models/DatabaseEmployee.js";
 import EmployeeFacade from "../Facades/EmployeeFacade.js"
-const dataBaseEmployee = new DatabaseEmployee();
 
-const registerEmployee = async (req, res) => {
-  console.log(req.body);
-  
-  try {
-    await dataBaseEmployee.createEmployee(req.body);
-    res.sendStatus(200);
-  } catch (err) {
-    console.error("Erro ao criar funcionário:", err);
-    res.sendStatus(400);
+export default class EmployeeController {
+  constructor(employeeRepository) {
+    this.employeeRepository = employeeRepository;
   }
-};
 
-const viewsEmployee = async (req, res) => {
-  try {
-    const employees = await dataBaseEmployee.readEmployees();
-    res.send(employees);
-  } catch (err) {
-    res.sendStatus(404);
+  async registerEmployee(req, res) {
+    try {
+      EmployeeFacade.checkData(req.body);
+      await this.employeeRepository.register(req.body);
+      res.json({ok: 200, msg: "Funcionário cadastrado com sucesso"});
+    } catch (err) {
+      res.json({ok: 400, msg: err.message});
+    }
+  };
+
+  async viewsAllEmployee(req, res) {
+    try {
+      const readsEmployees = await this.employeeRepository.readAll();
+      const dataEmployees = EmployeeFacade.formatFullName(readsEmployees);
+      res.json(dataEmployees);
+    } catch (err) {
+      res.json({ok: 404, msg: err.message});
+    }
+  };
+
+  async viewEmployee(req, res) {
+    try {
+      const { registration } = req.params
+      const readsEmployees = await this.employeeRepository.getEmployee(registration);
+      res.json(readsEmployees);
+    } catch (err) {
+      res.json({ok: 404, msg: err.message});
+    }
+  };
+
+  async updateEmployee(req, res) {
+    try {
+      EmployeeFacade.checkData(req.body);
+      await this.employeeRepository.edit(req.body);
+      res.json({ok: 200, msg: "Funcionário atualizado com sucesso"});
+    } catch (error) {;
+      res.json({ok: 400, msg: err.message});
+    }
   }
-};
 
-const updateEmployee = async (req, res) => {
-  try {
-    EmployeeFacade.checkData(req.body);
-    await dataBaseEmployee.updateEmployeeAndPhoneNumber(req.body);
-    res.sendStatus(200);
-  } catch (error) {;
-    res.sendStatus(400);
+  async deleteEmployee(req, res) {
+    try {
+      const { registration } = req.params
+      await this.employeeRepository.delete(registration);
+      res.json({ok: 200, msg: "Funcionário deletado com sucesso"});
+    } catch (error) {
+      res.json({ok: 404, msg: err.message});
+    }
   }
-}
-
-const deleteEmployee = async (req, res) => {
-  try {
-    EmployeeFacade.checkData(req.body);
-    await dataBaseEmployee.deleteEmployee(req.body);
-    res.sendStatus(200);
-  } catch (error) {
-    res.sendStatus(404);
-  }
-}
-
-export default {
-  registerEmployee,
-  viewsEmployee,
-  updateEmployee,
-  deleteEmployee
 }
