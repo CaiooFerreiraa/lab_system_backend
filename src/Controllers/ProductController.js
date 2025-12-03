@@ -28,7 +28,6 @@ export default class ProductController {
   async edit(req, res) {
     try {
       const queryParams = req.query;
-      console.log(queryParams)
       await this.productReporitory.edit(queryParams);
       res.json({status: 200, msg: "Produto atualizado com sucesso"});
     } catch (error) {

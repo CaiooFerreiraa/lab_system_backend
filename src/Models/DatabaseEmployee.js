@@ -53,8 +53,6 @@ export default class DatabaseEmployee extends IDatabase {
 
   async #updateEmployeeData(employeeData) {
     try {
-      console.log(employeeData.shift)
-
       await this.db`
         UPDATE lab_system.funcionario
         SET turno = ${employeeData.shift}, nome = ${employeeData.name}, sobrenome = ${employeeData.lastName}
