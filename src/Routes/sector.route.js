@@ -12,5 +12,6 @@ route.get('/search', (req, res) => sectorController.search(req, res));
 route.put('/edit', (req, res) => sectorController.edit(req, res));
 route.delete('/delete', (req, res) => sectorController.delete(req, res));
 route.get('/read', (req, res) => sectorController.readAll(req, res));
+route.get('/list', (req, res) => sectorController.list(req, res));
 
 export default route;

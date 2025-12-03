@@ -18,14 +18,13 @@ export default class DatabaseModel extends IDatabase {
 
       // 2️⃣ Inserir especificações vinculadas ao modelo
       for (const esp of especificacoes) {
+        console.log(esp)
+
         await this.db`
-          INSERT INTO lab_system.especificacao (cod_modelo, tipo, valor_especificacao)
-          VALUES (${cod_modelo}, ${esp.tipo}, ${esp.valor});
+          INSERT INTO lab_system.especificacao (cod_modelo, tipo, valor_especificacao, valor_variacao)
+          VALUES (${cod_modelo}, ${esp.tipo}, ${esp.valor}, ${esp.variacao});
         `;
       }
-
-      return cod_modelo;
-
     } catch (error) {
       throw new Error(error.message);
     }
@@ -47,12 +46,40 @@ export default class DatabaseModel extends IDatabase {
 
   async search(id) {
     try {
-      const modelo = await this.db`
-        SELECT a.nome, a.tipo, b.nome as marca
-        FROM lab_system.modelo a
-        JOIN lab_system.marca b ON a.cod_marca = b.cod_marca
-        WHERE a.nome = ${id};
+      const result = await this.db`
+        SELECT 
+          m.cod_modelo,
+          m.nome,
+          m.tipo,
+          ma.nome AS marca,
+          e.tipo AS espec_tipo,
+          e.valor_especificacao AS Valor,
+          e.valor_variacao AS "Variação"
+        FROM lab_system.modelo m
+        JOIN lab_system.marca ma ON m.cod_marca = ma.cod_marca
+        LEFT JOIN lab_system.especificacao e ON m.cod_modelo = e.cod_modelo
+        WHERE m.nome = ${id};
       `;
+
+      if (result.length === 0) return null;
+
+      // Montar resposta estruturada
+      const modelo = {
+        nome: result[0].nome,
+        tipo: result[0].tipo,
+        marca: result[0].marca,
+        especificacoes: []
+      };
+
+      for (const row of result) {
+        if (row.espec_tipo) {
+          modelo.especificacoes.push({
+            tipo: row.espec_tipo,
+            valor: row.valor,
+            variacao: row["Variação"]
+          });
+        }
+      }
 
       return modelo;
     } catch (error) {
@@ -60,9 +87,10 @@ export default class DatabaseModel extends IDatabase {
     }
   }
 
-  async edit({ id, nome, tipo, marca, especificacoes }) {
+  async edit({nome, tipo, marca, especificacoes }) {
     try {
-      let cod_marca = null;
+      let cod_marca = null; 
+      const cod_modelo = await this.#getCodModelFromName(nome);
 
       if (marca) {
         cod_marca = await this.#getBrandForName(marca);
@@ -75,20 +103,22 @@ export default class DatabaseModel extends IDatabase {
           nome = COALESCE(${nome}, nome),
           tipo = COALESCE(${tipo}, tipo),
           cod_marca = COALESCE(${cod_marca}, cod_marca)
-        WHERE cod_modelo = ${id};
+        WHERE cod_modelo = ${cod_modelo};
       `;
 
       // 2. Remover especificações antigas
       await this.db`
         DELETE FROM lab_system.especificacao
-        WHERE cod_modelo = ${id};
+        WHERE cod_modelo = ${cod_modelo};
       `;
 
       // 3. Inserir as novas
       for (const esp of especificacoes) {
+        console.log(esp)
+
         await this.db`
-          INSERT INTO lab_system.especificacao (cod_modelo, tipo, valor_especificacao)
-          VALUES (${id}, ${esp.tipo}, ${esp.valor});
+          INSERT INTO lab_system.especificacao (cod_modelo, tipo, valor_especificacao, valor_variacao)
+          VALUES (${cod_modelo}, ${esp.tipo}, ${esp.valor}, ${esp.variacao});
         `;
       }
 
@@ -97,8 +127,24 @@ export default class DatabaseModel extends IDatabase {
     }
   }
 
-  async delete({ id }) {
+  async #getCodModelFromName(name) {
     try {
+      const [{cod_modelo}] = await this.db`
+        SELECT cod_modelo
+        FROM lab_system.modelo
+        WHERE nome = ${name}
+      `
+
+      return cod_modelo;
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  }
+
+  async delete({ nome }) {
+    try {
+      const id = await this.#getCodModelFromName(nome)
+
       await this.db`
         DELETE FROM lab_system.modelo
         WHERE cod_modelo = ${id};
@@ -108,17 +154,34 @@ export default class DatabaseModel extends IDatabase {
     }
   }
 
-  async readAll() {
-    try {
-      const modelos = await this.db`
-        SELECT a.nome, a.tipo, b.nome as marca
-        FROM lab_system.modelo a
-        JOIN lab_system.marca b ON a.cod_marca = b.cod_marca;
-      `;
+async readAll() {
+  try {
+    const modelos = await this.db`
+      SELECT 
+        m.cod_modelo,
+        m.nome,
+        m.tipo,
+        ma.nome AS marca,
+        COALESCE(
+          json_agg(
+            json_build_object(
+              'tipo', e.tipo,
+              'valor', e.valor_especificacao,
+              'variacao', e.valor_variacao
+            )
+          ) FILTER (WHERE e.cod_especificacao IS NOT NULL),
+        '[]') AS especificacoes
+      FROM lab_system.modelo AS m
+      JOIN lab_system.marca AS ma ON m.cod_marca = ma.cod_marca
+      LEFT JOIN lab_system.especificacao AS e ON m.cod_modelo = e.cod_modelo
+      GROUP BY m.cod_modelo, m.nome, m.tipo, ma.nome
+      ORDER BY m.nome;
+    `;
 
-      return modelos;
-    } catch (error) {
-      throw new Error(error.message);
-    }
+    return modelos;
+  } catch (error) {
+    throw new Error(error.message);
   }
+}
+
 }

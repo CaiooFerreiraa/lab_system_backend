@@ -33,13 +33,9 @@ export default class ModelController {
 
   async edit(req, res) {
     try {
-      const id = req.params.id;
       const data = req.body;
-
-      await this.modelRepository.edit({ id, ...data });
-
+      await this.modelRepository.edit(data);
       res.json({ ok: 200, msg: "Modelo atualizado com sucesso!" });
-
     } catch (error) {
       res.json({ ok: 400, msg: error.message });
     }

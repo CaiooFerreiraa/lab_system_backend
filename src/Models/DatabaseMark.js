@@ -157,7 +157,7 @@ export default class DatabaseMark extends IDatabase {
         SELECT enumlabel
         FROM pg_enum
         JOIN pg_type ON pg_enum.enumtypid = pg_type.oid
-        WHERE pg_type.typname = 'modelo_tipo_enum';
+        WHERE pg_type.typname = 'modelo_tipo';
       `;
       return methods.map(m => m.enumlabel);
     } catch (error) {

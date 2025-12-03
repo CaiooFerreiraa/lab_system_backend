@@ -20,14 +20,33 @@ export default class DatabaseSector extends IDatabase {
 
   async search(nome) {
     try {
-      const [setor] = await this.db`
+      const setor = await this.db`
         SELECT *
         FROM lab_system.setor
         WHERE nome = ${nome}
       `
+      console.log(setor)
+
       return setor;
     } catch (error) {
       throw new Error(error.message)
+    }
+  }
+
+  async searchMateriaisInSetor(nome) {
+    try {
+      const materiaisInSetor = await this.db`
+        SELECT a.nome as Setor, b.tipo as Tipo, b.referencia as "Referência"
+        FROM lab_system.setor a
+        JOIN lab_system.material b ON a.id = b.cod_setor
+        WHERE a.nome = ${nome}
+        ORDER BY b.referencia;
+      `
+
+      console.log(materiaisInSetor)
+      return materiaisInSetor;
+    } catch (error) {
+      throw new Error(error.message);
     }
   }
   

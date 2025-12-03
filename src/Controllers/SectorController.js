@@ -51,4 +51,13 @@ export default class SectorController {
       throw new Error(error.message)
     }
   }
+
+  async list(req, res) {
+    try {
+      const setor = await this.sectorRepository.searchMateriaisInSetor(req.query.uuid)
+      res.json({ok: 200, setor});
+    } catch (error) {
+      res.json({ok: 404});
+    }
+  }
 }
