@@ -46,13 +46,13 @@ export default class DatabaseProduct extends IDatabase {
     }
   }
   
-  async edit({uuid, newcode, newsector}) {
+  async edit({uuid, newcode, newsector, newtipo}) {
     try {
       const cod_setor = await this.#getSectorForName(newsector)
 
       await this.db`
         UPDATE lab_system.material
-        SET referencia = ${newcode}, cod_setor = ${cod_setor}
+        SET referencia = ${newcode}, cod_setor = ${cod_setor}, tipo = ${newtipo}
         WHERE referencia = ${uuid}
       `
     } catch (error) {
