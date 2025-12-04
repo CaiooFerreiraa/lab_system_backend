@@ -43,7 +43,7 @@ export default class DatabaseModel extends IDatabase {
   async search(id) {
     try {
       const result = await this.db`
-        SELECT 
+        SELECT
           m.cod_modelo,
           m.nome,
           m.tipo,
@@ -60,6 +60,7 @@ export default class DatabaseModel extends IDatabase {
       if (result.length === 0) return null;
 
       const modelo = {
+        cod_modelo: result[0].cod_modelo,
         nome: result[0].nome,
         tipo: result[0].tipo,
         marca: result[0].marca,
@@ -82,14 +83,9 @@ export default class DatabaseModel extends IDatabase {
     }
   }
 
-  async edit({nome, tipo, marca, especificacoes }) {
+  async edit({cod_modelo, nome, tipo, marca, especificacoes }) {
     try {
-      let cod_marca = null; 
-      const cod_modelo = await this.#getCodModelFromName(nome);
-
-      if (marca) {
-        cod_marca = await this.#getBrandForName(marca);
-      }
+      const cod_marca = await this.#getBrandForName(marca);
 
       await this.db`
         UPDATE lab_system.modelo
@@ -167,6 +163,8 @@ async readAll() {
       GROUP BY m.cod_modelo, m.nome, m.tipo, ma.nome
       ORDER BY m.nome;
     `;
+
+    console.log(modelos)
 
     return modelos;
   } catch (error) {
