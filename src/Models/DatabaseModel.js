@@ -9,17 +9,13 @@ export default class DatabaseModel extends IDatabase {
     try {
       const cod_marca = await this.#getBrandForName(marca);
 
-      // 1️⃣ Inserir modelo
       const [{ cod_modelo }] = await this.db`
         INSERT INTO lab_system.modelo (nome, tipo, cod_marca)
         VALUES (${nome}, ${tipo}, ${cod_marca})
         RETURNING cod_modelo;
       `;
 
-      // 2️⃣ Inserir especificações vinculadas ao modelo
       for (const esp of especificacoes) {
-        console.log(esp)
-
         await this.db`
           INSERT INTO lab_system.especificacao (cod_modelo, tipo, valor_especificacao, valor_variacao)
           VALUES (${cod_modelo}, ${esp.tipo}, ${esp.valor}, ${esp.variacao});
@@ -63,7 +59,6 @@ export default class DatabaseModel extends IDatabase {
 
       if (result.length === 0) return null;
 
-      // Montar resposta estruturada
       const modelo = {
         nome: result[0].nome,
         tipo: result[0].tipo,
@@ -96,7 +91,6 @@ export default class DatabaseModel extends IDatabase {
         cod_marca = await this.#getBrandForName(marca);
       }
 
-      // 1. Atualizar o modelo
       await this.db`
         UPDATE lab_system.modelo
         SET 
@@ -106,16 +100,12 @@ export default class DatabaseModel extends IDatabase {
         WHERE cod_modelo = ${cod_modelo};
       `;
 
-      // 2. Remover especificações antigas
       await this.db`
         DELETE FROM lab_system.especificacao
         WHERE cod_modelo = ${cod_modelo};
       `;
 
-      // 3. Inserir as novas
       for (const esp of especificacoes) {
-        console.log(esp)
-
         await this.db`
           INSERT INTO lab_system.especificacao (cod_modelo, tipo, valor_especificacao, valor_variacao)
           VALUES (${cod_modelo}, ${esp.tipo}, ${esp.valor}, ${esp.variacao});

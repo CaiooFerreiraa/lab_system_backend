@@ -66,12 +66,12 @@ export default class DatabaseMark extends IDatabase {
       const marks = await this.db`
         SELECT a.nome as marca, b.nome as metodo, b.descricao as descrição, b.cod_metodo
         FROM lab_system.marca a
-        LEFT JOIN lab_system.metodo b ON a.cod_marca = b.fk_marca_cod_marca
+        LEFT JOIN lab_system.metodo b ON a.cod_marca = b.cod_marca
         WHERE a.nome = ${nome};
       `
       return marks;
     } catch (error) {
-      throw new Error("Nome da marca não encontrado");
+      throw new Error(error.message);
     }
   }
 
@@ -107,7 +107,7 @@ export default class DatabaseMark extends IDatabase {
         await this.db`
           UPDATE lab_system.metodo
           SET nome = ${metodo.nome}, descricao = ${metodo.descricao}
-          WHERE fk_marca_cod_marca = ${cod_marca} and cod_metodo = ${metodo.cod_metodo};
+          WHERE cod_marca = ${cod_marca} and cod_metodo = ${metodo.cod_metodo};
         `;
       }
     } catch (error) {

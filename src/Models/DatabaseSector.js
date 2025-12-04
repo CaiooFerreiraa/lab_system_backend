@@ -21,11 +21,10 @@ export default class DatabaseSector extends IDatabase {
   async search(nome) {
     try {
       const setor = await this.db`
-        SELECT *
+        SELECT nome
         FROM lab_system.setor
         WHERE nome = ${nome}
       `
-      console.log(setor)
 
       return setor;
     } catch (error) {
@@ -43,7 +42,6 @@ export default class DatabaseSector extends IDatabase {
         ORDER BY b.referencia;
       `
 
-      console.log(materiaisInSetor)
       return materiaisInSetor;
     } catch (error) {
       throw new Error(error.message);

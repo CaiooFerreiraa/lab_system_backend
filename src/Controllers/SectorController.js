@@ -14,7 +14,7 @@ export default class SectorController {
 
   async search(req, res) {
     try {
-      const setor = await this.sectorRepository.search(req.query.uuid)
+      const setor = await this.sectorRepository.search(req.query.nome)
       res.json({ok: 200, setor});
     } catch (error) {
       res.json({ok: 404});
